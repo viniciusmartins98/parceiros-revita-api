@@ -1,0 +1,85 @@
+﻿{
+   "CodeGenerationMode": 6,
+   "ContextClassName": "DatabaseContext",
+   "ContextNamespace": "RevitaParceiros.Infra.Persistence",
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "IrregularWords": null,
+   "MinimumProductVersion": "2.6.1604",
+   "ModelNamespace": "RevitaParceiros.Domain.Entities",
+   "OutputContextPath": null,
+   "OutputPath": "Persistence",
+   "PluralRules": null,
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 4,
+   "SelectedToBeGenerated": 1,
+   "SingularRules": null,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "public.clientes",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.compras",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.extrato_pontos",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.funcionarios",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.parceiros",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.regras_pontuacao",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.resgates",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.tokens_atualizacao",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.usuarios",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}
