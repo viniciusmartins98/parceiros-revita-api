@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace RevitaParceiros.API.Controllers;
@@ -15,6 +16,7 @@ public sealed class HealthController(IServiceProvider provider) : ControllerBase
     /// <returns>Status da API.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(HealthResponse), StatusCodes.Status200OK)]
+    [AllowAnonymous]
     public IActionResult Get()
     {
         return Ok(new HealthResponse(
