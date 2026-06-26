@@ -1,9 +1,12 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
   <Folder Name="/src/">
-    <Project Path="src/RevitaParceiros.Domain/RevitaParceiros.Domain.csproj" />
-    <Project Path="src/RevitaParceiros.Application/RevitaParceiros.Application.csproj" />
-    <Project Path="src/RevitaParceiros.Infra/RevitaParceiros.Infra.csproj" />
     <Project Path="src/RevitaParceiros.API/RevitaParceiros.API.csproj" />
+    <Project Path="src/RevitaParceiros.Application/RevitaParceiros.Application.csproj" />
+    <Project Path="src/RevitaParceiros.Domain/RevitaParceiros.Domain.csproj" />
+    <Project Path="src/RevitaParceiros.Infra/RevitaParceiros.Infra.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/RevitaParceiros.Tests/RevitaParceiros.Tests.csproj" />
