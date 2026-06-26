@@ -77,5 +77,12 @@ A arquitetura da API suportará os seguintes domínios de negócio:
 - **Loyalty/Points:** Motor de cálculo e registro de auditoria (ledger) de pontuação.
 - **Profiles:** Dashboards específicos para Parceiros e histórico para Clientes.
 
+## Docker
+1. Construa a imagem com a tag desejada (o ponto final indica o diretório atual)
+```docker build -t vinomartins/revita-parceiros-api:latest .```
+
+2. Envie a imagem para o Docker Hub
+```docker push vinomartins/revita-parceiros-api:latest```
+
 ---
 *Para mais detalhes sobre as regras de negócio completas, consulte o documento geral de requisitos na raiz do projeto.*

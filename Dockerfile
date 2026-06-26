@@ -5,19 +5,19 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS restore
 
 WORKDIR /src
 
-COPY RevitaParceiros.API/RevitaParceiros.API.csproj RevitaParceiros.API/
-COPY RevitaParceiros.Application/RevitaParceiros.Application.csproj RevitaParceiros.Application/
-COPY RevitaParceiros.Domain/RevitaParceiros.Domain.csproj RevitaParceiros.Domain/
-COPY RevitaParceiros.Infra/RevitaParceiros.Infra.csproj RevitaParceiros.Infra/
+COPY src/RevitaParceiros.API/RevitaParceiros.API.csproj src/RevitaParceiros.API/
+COPY src/RevitaParceiros.Application/RevitaParceiros.Application.csproj src/RevitaParceiros.Application/
+COPY src/RevitaParceiros.Domain/RevitaParceiros.Domain.csproj src/RevitaParceiros.Domain/
+COPY src/RevitaParceiros.Infra/RevitaParceiros.Infra.csproj src/RevitaParceiros.Infra/
 
-RUN dotnet restore RevitaParceiros.API/RevitaParceiros.API.csproj
+RUN dotnet restore src/RevitaParceiros.API/RevitaParceiros.API.csproj
 
 # ==============================================================================
 # Stage 2 - Build & Publish
 # ==============================================================================
 FROM restore AS publish
 COPY . .
-RUN dotnet publish RevitaParceiros.API/RevitaParceiros.API.csproj \
+RUN dotnet publish src/RevitaParceiros.API/RevitaParceiros.API.csproj \
     -c Release \
     -o /app/publish \
     --no-restore
