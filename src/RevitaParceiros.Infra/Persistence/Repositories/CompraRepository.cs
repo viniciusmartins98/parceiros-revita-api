@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using RevitaParceiros.Domain.Entities;
 using RevitaParceiros.Domain.Interfaces;
 
@@ -22,5 +23,33 @@ public sealed class CompraRepository(DatabaseContext context) : ICompraRepositor
         context.Clientes.Update(cliente);
 
         await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<(decimal TotalAmount, int TotalPoints)> GetPartnerAccumulatedAsync(Guid parceiroId, CancellationToken cancellationToken = default)
+    {
+        var result = await context.Compras
+            .Where(c => c.ParceiroId == parceiroId)
+            .GroupBy(c => c.ParceiroId)
+            .Select(g => new { 
+                TotalAmount = g.Sum(c => c.Valor),
+                TotalPoints = g.Sum(c => c.PontosGeradosParceiro)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return (result?.TotalAmount ?? 0m, result?.TotalPoints ?? 0);
+    }
+
+    public async Task<(decimal TotalAmount, int TotalPoints)> GetClientAccumulatedAsync(Guid clienteId, CancellationToken cancellationToken = default)
+    {
+        var result = await context.Compras
+            .Where(c => c.ClienteId == clienteId)
+            .GroupBy(c => c.ClienteId)
+            .Select(g => new { 
+                TotalAmount = g.Sum(c => c.Valor),
+                TotalPoints = g.Sum(c => c.PontosGeradosCliente)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return (result?.TotalAmount ?? 0m, result?.TotalPoints ?? 0);
     }
 }
