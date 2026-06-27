@@ -9,10 +9,10 @@ using RevitaParceiros.Application.Features.Partners.UpdatePartner;
 
 namespace RevitaParceiros.API.Controllers;
 
-[Authorize(Roles = "Administrador")]
 public class PartnersController(IServiceProvider provider) : ControllerBase<PartnersController>(provider)
 {
     [HttpGet]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new ListPartnersRequest(), cancellationToken);
@@ -20,6 +20,7 @@ public class PartnersController(IServiceProvider provider) : ControllerBase<Part
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetPartnerByIdRequest(id), cancellationToken);
@@ -27,6 +28,7 @@ public class PartnersController(IServiceProvider provider) : ControllerBase<Part
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Create([FromBody] CreatePartnerRequest request, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(request, cancellationToken);
@@ -34,6 +36,7 @@ public class PartnersController(IServiceProvider provider) : ControllerBase<Part
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdatePartnerRequest request, CancellationToken cancellationToken)
     {
         var requestWithId = request with { Id = id };
@@ -42,6 +45,7 @@ public class PartnersController(IServiceProvider provider) : ControllerBase<Part
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         await Mediator.Send(new DeletePartnerRequest(id), cancellationToken);

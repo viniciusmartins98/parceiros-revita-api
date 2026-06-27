@@ -1,4 +1,3 @@
-using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RevitaParceiros.Application.Features.Clients.CreateClient;
@@ -9,10 +8,10 @@ using RevitaParceiros.Application.Features.Clients.UpdateClient;
 
 namespace RevitaParceiros.API.Controllers;
 
-[Authorize(Roles = "Administrador")]
 public class ClientsController(IServiceProvider provider) : ControllerBase<ClientsController>(provider)
 {
     [HttpGet]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new ListClientsRequest(), cancellationToken);
@@ -20,6 +19,7 @@ public class ClientsController(IServiceProvider provider) : ControllerBase<Clien
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetClientByIdRequest(id), cancellationToken);
@@ -27,6 +27,7 @@ public class ClientsController(IServiceProvider provider) : ControllerBase<Clien
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> Create([FromBody] CreateClientRequest request, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(request, cancellationToken);
@@ -34,6 +35,7 @@ public class ClientsController(IServiceProvider provider) : ControllerBase<Clien
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateClientRequest request, CancellationToken cancellationToken)
     {
         var requestWithId = request with { Id = id };
@@ -42,6 +44,7 @@ public class ClientsController(IServiceProvider provider) : ControllerBase<Clien
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         await Mediator.Send(new DeleteClientRequest(id), cancellationToken);
