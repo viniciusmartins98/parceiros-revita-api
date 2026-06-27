@@ -1,8 +1,8 @@
 using Mediator;
 
-namespace RevitaParceiros.Application.Features.Scoring.SaveConfig;
+namespace RevitaParceiros.Application.Features.Scoring.SaveClientConfig;
 
-public sealed record SaveConfigCommand(
+public sealed record SaveClientConfigCommand(
     decimal PurchaseAmountPerPoint,
     int PointsGenerated,
     int PointsForRedemption,

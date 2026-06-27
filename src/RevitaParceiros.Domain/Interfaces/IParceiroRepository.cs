@@ -4,11 +4,11 @@ namespace RevitaParceiros.Domain.Interfaces;
 
 public interface IParceiroRepository
 {
-    Task<IReadOnlyCollection<Usuarios>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<Usuarios?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task AddAsync(Usuarios usuario, CancellationToken cancellationToken = default);
-    Task UpdateAsync(Usuarios usuario, CancellationToken cancellationToken = default);
-    Task DeleteAsync(Usuarios usuario, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<Parceiros>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Parceiros?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task AddAsync(Parceiros parceiro, CancellationToken cancellationToken = default);
+    Task UpdateAsync(Parceiros parceiro, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Parceiros parceiro, CancellationToken cancellationToken = default);
     Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
     Task<bool> ExistsByEmailExceptIdAsync(string email, Guid id, CancellationToken cancellationToken = default);
 }

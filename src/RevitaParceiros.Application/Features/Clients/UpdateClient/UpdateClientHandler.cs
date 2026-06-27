@@ -20,24 +20,21 @@ public sealed class UpdateClientHandler(
             throw new BusinessRuleException("Já existe outro usuário cadastrado com este e-mail.");
         }
 
-        cliente.Nome = request.Name;
-        cliente.Email = request.Email;
-        cliente.Telefone = request.Phone;
-        cliente.Ativo = request.IsActive;
+        cliente.Usuario.Nome = request.Name;
+        cliente.Usuario.Email = request.Email;
+        cliente.Usuario.Telefone = request.Phone;
+        cliente.Usuario.Ativo = request.IsActive;
+        cliente.Usuario.AtualizadoEm = dateTimeProvider.UtcNow;
         cliente.AtualizadoEm = dateTimeProvider.UtcNow;
-        if (cliente.Clientes != null)
-        {
-            cliente.Clientes.AtualizadoEm = dateTimeProvider.UtcNow;
-        }
 
         await clienteRepository.UpdateAsync(cliente, cancellationToken);
 
         return new ClientDto(
             cliente.Id,
-            cliente.Nome,
-            cliente.Telefone,
-            cliente.Email,
-            cliente.Ativo,
-            cliente.CriadoEm);
+            cliente.Usuario.Nome,
+            cliente.Usuario.Telefone,
+            cliente.Usuario.Email,
+            cliente.Usuario.Ativo,
+            cliente.Usuario.CriadoEm);
     }
 }

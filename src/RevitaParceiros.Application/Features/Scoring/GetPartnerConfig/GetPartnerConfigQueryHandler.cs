@@ -1,24 +1,23 @@
 using Mediator;
 using RevitaParceiros.Domain.Interfaces;
 
-namespace RevitaParceiros.Application.Features.Scoring.GetConfig;
+namespace RevitaParceiros.Application.Features.Scoring.GetPartnerConfig;
 
-public sealed class GetConfigQueryHandler : IRequestHandler<GetConfigQuery, ScoringConfigDto>
+public sealed class GetPartnerConfigQueryHandler : IRequestHandler<GetPartnerConfigQuery, ScoringConfigDto>
 {
     private readonly IRegrasPontuacaoRepository _repository;
 
-    public GetConfigQueryHandler(IRegrasPontuacaoRepository repository)
+    public GetPartnerConfigQueryHandler(IRegrasPontuacaoRepository repository)
     {
         _repository = repository;
     }
 
-    public async ValueTask<ScoringConfigDto> Handle(GetConfigQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ScoringConfigDto> Handle(GetPartnerConfigQuery request, CancellationToken cancellationToken)
     {
         var config = await _repository.GetActiveConfigAsync(cancellationToken);
 
         if (config == null)
         {
-            // Default fallback if nothing is configured
             return new ScoringConfigDto
             {
                 PurchaseAmountPerPoint = 1000,
@@ -31,10 +30,10 @@ public sealed class GetConfigQueryHandler : IRequestHandler<GetConfigQuery, Scor
 
         return new ScoringConfigDto
         {
-            PurchaseAmountPerPoint = config.ValorCompraMinimo,
-            PointsGenerated = config.PontosPorValor,
-            PointsForRedemption = config.PontosParaConversaoMonetaria,
-            RedemptionValue = config.ValorMonetarioPorPontos,
+            PurchaseAmountPerPoint = config.ValorCompraMinimoParceiro,
+            PointsGenerated = config.PontosPorValorParceiro,
+            PointsForRedemption = config.PontosParaConversaoMonetariaParceiro,
+            RedemptionValue = config.ValorMonetarioPorPontosParceiro,
             UpdatedAt = config.AtualizadoEm ?? config.CriadoEm
         };
     }

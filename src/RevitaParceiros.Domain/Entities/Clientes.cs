@@ -18,7 +18,14 @@ public partial class Clientes
 
     public DateTime? AtualizadoEm { get; set; }
 
+    /// <summary>
+    /// Saldo atual de pontos do cliente (ganhos - resgates).
+    /// </summary>
+    public int TotalPontos { get; set; }
+
     public virtual ICollection<Compras> Compras { get; set; } = new List<Compras>();
+
+    public virtual ICollection<ExtratoPontos> ExtratoPontos { get; set; } = new List<ExtratoPontos>();
 
     public virtual Usuarios Usuario { get; set; }
 }

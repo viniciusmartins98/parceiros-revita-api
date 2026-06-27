@@ -2,23 +2,26 @@ using System.Security.Claims;
 using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RevitaParceiros.Application.Features.Scoring.GetConfig;
-using RevitaParceiros.Application.Features.Scoring.SaveConfig;
+using RevitaParceiros.Application.Features.Scoring;
+using RevitaParceiros.Application.Features.Scoring.GetPartnerConfig;
+using RevitaParceiros.Application.Features.Scoring.SavePartnerConfig;
+using RevitaParceiros.Application.Features.Scoring.GetClientConfig;
+using RevitaParceiros.Application.Features.Scoring.SaveClientConfig;
 
 namespace RevitaParceiros.API.Controllers;
 
 public class ScoringController(IServiceProvider provider) : ControllerBase<ScoringController>(provider)
 {
-    [HttpGet("config")]
-    public async Task<IActionResult> GetConfig(CancellationToken cancellationToken)
+    [HttpGet("partner-config")]
+    public async Task<IActionResult> GetPartnerConfig(CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetConfigQuery(), cancellationToken);
+        var result = await Mediator.Send(new GetPartnerConfigQuery(), cancellationToken);
         return Ok(result);
     }
 
-    [HttpPut("config")]
+    [HttpPut("partner-config")]
     [Authorize(Roles = "Administrador")]
-    public async Task<IActionResult> SaveConfig([FromBody] UpdateScoringRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> SavePartnerConfig([FromBody] ScoringConfigDto request, CancellationToken cancellationToken)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
         if (!Guid.TryParse(userIdString, out var userId))
@@ -26,7 +29,7 @@ public class ScoringController(IServiceProvider provider) : ControllerBase<Scori
             return Unauthorized();
         }
 
-        var command = new SaveConfigCommand(
+        var command = new SavePartnerConfigCommand(
             request.PurchaseAmountPerPoint,
             request.PointsGenerated,
             request.PointsForRedemption,
@@ -37,12 +40,33 @@ public class ScoringController(IServiceProvider provider) : ControllerBase<Scori
         var result = await Mediator.Send(command, cancellationToken);
         return Ok(result);
     }
-}
 
-public class UpdateScoringRequest
-{
-    public decimal PurchaseAmountPerPoint { get; set; }
-    public int PointsGenerated { get; set; }
-    public int PointsForRedemption { get; set; }
-    public decimal RedemptionValue { get; set; }
+    [HttpGet("client-config")]
+    public async Task<IActionResult> GetClientConfig(CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new GetClientConfigQuery(), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpPut("client-config")]
+    [Authorize(Roles = "Administrador")]
+    public async Task<IActionResult> SaveClientConfig([FromBody] ScoringConfigDto request, CancellationToken cancellationToken)
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+        if (!Guid.TryParse(userIdString, out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var command = new SaveClientConfigCommand(
+            request.PurchaseAmountPerPoint,
+            request.PointsGenerated,
+            request.PointsForRedemption,
+            request.RedemptionValue,
+            userId
+        );
+
+        var result = await Mediator.Send(command, cancellationToken);
+        return Ok(result);
+    }
 }

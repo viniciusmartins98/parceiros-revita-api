@@ -20,24 +20,21 @@ public sealed class UpdatePartnerHandler(
             throw new BusinessRuleException("Já existe outro usuário cadastrado com este e-mail.");
         }
 
-        parceiro.Nome = request.Name;
-        parceiro.Email = request.Email;
-        parceiro.Telefone = request.Phone;
-        parceiro.Ativo = request.IsActive;
+        parceiro.Usuario.Nome = request.Name;
+        parceiro.Usuario.Email = request.Email;
+        parceiro.Usuario.Telefone = request.Phone;
+        parceiro.Usuario.Ativo = request.IsActive;
+        parceiro.Usuario.AtualizadoEm = dateTimeProvider.UtcNow;
         parceiro.AtualizadoEm = dateTimeProvider.UtcNow;
-        if (parceiro.Parceiros != null)
-        {
-            parceiro.Parceiros.AtualizadoEm = dateTimeProvider.UtcNow;
-        }
 
         await parceiroRepository.UpdateAsync(parceiro, cancellationToken);
 
         return new PartnerDto(
             parceiro.Id,
-            parceiro.Nome,
-            parceiro.Telefone,
-            parceiro.Email,
-            parceiro.Ativo,
-            parceiro.CriadoEm);
+            parceiro.Usuario.Nome,
+            parceiro.Usuario.Telefone,
+            parceiro.Usuario.Email,
+            parceiro.Usuario.Ativo,
+            parceiro.Usuario.CriadoEm);
     }
 }

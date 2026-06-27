@@ -17,22 +17,22 @@ public partial class RegrasPontuacao
     /// <summary>
     /// Valor em R$ de compras necessário para gerar pontos (ex: R$ 1.000,00).
     /// </summary>
-    public decimal ValorCompraMinimo { get; set; }
+    public decimal ValorCompraMinimoParceiro { get; set; }
 
     /// <summary>
     /// Quantidade de pontos gerados ao atingir o valor mínimo (ex: 100 pontos).
     /// </summary>
-    public int PontosPorValor { get; set; }
+    public int PontosPorValorParceiro { get; set; }
 
     /// <summary>
     /// Valor em R$ que o parceiro recebe ao resgatar pontos (ex: R$ 50,00).
     /// </summary>
-    public decimal ValorMonetarioPorPontos { get; set; }
+    public decimal ValorMonetarioPorPontosParceiro { get; set; }
 
     /// <summary>
     /// Quantidade de pontos necessários para conversão monetária (ex: 100 pontos).
     /// </summary>
-    public int PontosParaConversaoMonetaria { get; set; }
+    public int PontosParaConversaoMonetariaParceiro { get; set; }
 
     /// <summary>
     /// Apenas uma regra ativa por vez — controlado por lógica de aplicação.
@@ -44,6 +44,26 @@ public partial class RegrasPontuacao
     public DateTime CriadoEm { get; set; }
 
     public DateTime? AtualizadoEm { get; set; }
+
+    /// <summary>
+    /// Valor em R$ de compras necessário para gerar pontos para o cliente (ex: R$ 1.000,00).
+    /// </summary>
+    public decimal ValorCompraMinimoCliente { get; set; }
+
+    /// <summary>
+    /// Quantidade de pontos gerados ao atingir o valor mínimo para o cliente.
+    /// </summary>
+    public int PontosPorValorCliente { get; set; }
+
+    /// <summary>
+    /// Valor em R$ que o cliente recebe ao resgatar pontos.
+    /// </summary>
+    public decimal ValorMonetarioPorPontosCliente { get; set; }
+
+    /// <summary>
+    /// Quantidade de pontos necessários para conversão monetária do cliente.
+    /// </summary>
+    public int PontosParaConversaoMonetariaCliente { get; set; }
 
     public virtual Usuarios CriadoPorNavigation { get; set; }
 }

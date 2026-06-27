@@ -10,12 +10,12 @@ public sealed class ListPartnersHandler(IParceiroRepository parceiroRepository)
     {
         var parceiros = await parceiroRepository.GetAllAsync(cancellationToken);
 
-        return parceiros.Select(u => new PartnerDto(
-            u.Id,
-            u.Nome,
-            u.Telefone,
-            u.Email,
-            u.Ativo,
-            u.CriadoEm)).ToList();
+        return parceiros.Select(p => new PartnerDto(
+            p.Id,
+            p.Usuario.Nome,
+            p.Usuario.Telefone,
+            p.Usuario.Email,
+            p.Usuario.Ativo,
+            p.Usuario.CriadoEm)).ToList();
     }
 }

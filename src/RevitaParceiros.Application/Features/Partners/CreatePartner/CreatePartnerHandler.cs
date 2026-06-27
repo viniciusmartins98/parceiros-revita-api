@@ -23,35 +23,35 @@ public sealed class CreatePartnerHandler(
         var initialPassword = "Revita@" + request.Name.Split(' ').FirstOrDefault()?.Replace(" ", "");
         var passwordHash = passwordHasher.Hash(initialPassword);
 
-        var usuario = new Usuarios
+        var parceiro = new Parceiros
         {
             Id = Guid.NewGuid(),
-            Nome = request.Name,
-            Email = request.Email,
-            Telefone = request.Phone,
-            SenhaHash = passwordHash,
-            Ativo = request.IsActive,
+            TotalPontos = 0,
             CriadoEm = dateTimeProvider.UtcNow,
-            Perfil = PerfilUsuarioEnum.Parceiro,
-            Parceiros = new Parceiros
+            Usuario = new Usuarios
             {
                 Id = Guid.NewGuid(),
-                TotalPontos = 0,
-                CriadoEm = dateTimeProvider.UtcNow
+                Nome = request.Name,
+                Email = request.Email,
+                Telefone = request.Phone,
+                SenhaHash = passwordHash,
+                Ativo = request.IsActive,
+                CriadoEm = dateTimeProvider.UtcNow,
+                Perfil = PerfilUsuarioEnum.Parceiro
             }
         };
 
         // Link the relationship
-        usuario.Parceiros.UsuarioId = usuario.Id;
+        parceiro.UsuarioId = parceiro.Usuario.Id;
 
-        await parceiroRepository.AddAsync(usuario, cancellationToken);
+        await parceiroRepository.AddAsync(parceiro, cancellationToken);
 
         return new PartnerDto(
-            usuario.Id,
-            usuario.Nome,
-            usuario.Telefone,
-            usuario.Email,
-            usuario.Ativo,
-            usuario.CriadoEm);
+            parceiro.Id,
+            parceiro.Usuario.Nome,
+            parceiro.Usuario.Telefone,
+            parceiro.Usuario.Email,
+            parceiro.Usuario.Ativo,
+            parceiro.Usuario.CriadoEm);
     }
 }

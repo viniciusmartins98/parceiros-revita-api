@@ -33,11 +33,16 @@ public partial class Compras
     /// <summary>
     /// Pontos gerados para o parceiro nesta compra.
     /// </summary>
-    public int PontosGerados { get; set; }
+    public int PontosGeradosParceiro { get; set; }
 
     public DateTime CriadoEm { get; set; }
 
     public DateTime? AtualizadoEm { get; set; }
+
+    /// <summary>
+    /// Pontos gerados para o cliente nesta compra.
+    /// </summary>
+    public int PontosGeradosCliente { get; set; }
 
     public virtual Clientes Cliente { get; set; }
 

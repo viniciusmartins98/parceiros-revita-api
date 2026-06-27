@@ -7,49 +7,50 @@ namespace RevitaParceiros.Infra.Persistence.Repositories;
 
 public sealed class ClienteRepository(DatabaseContext context) : IClienteRepository
 {
-    public async Task<IReadOnlyCollection<Usuarios>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<Clientes>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await context.Usuarios
-            .Include(u => u.Clientes)
-            .Where(u => u.Clientes != null)
+        return await context.Clientes
+            .Include(c => c.Usuario)
             .AsNoTracking()
-            .OrderByDescending(u => u.CriadoEm)
+            .OrderByDescending(c => c.CriadoEm)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Usuarios?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Clientes?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Usuarios
-            .Include(u => u.Clientes)
-            .Include(u => u.TokensAtualizacao)
-            .FirstOrDefaultAsync(u => u.Id == id && u.Clientes != null, cancellationToken);
+        return await context.Clientes
+            .Include(c => c.Usuario)
+            .ThenInclude(u => u.TokensAtualizacao)
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 
-    public async Task AddAsync(Usuarios usuario, CancellationToken cancellationToken = default)
+    public async Task AddAsync(Clientes cliente, CancellationToken cancellationToken = default)
     {
-        await context.Usuarios.AddAsync(usuario, cancellationToken);
+        await context.Clientes.AddAsync(cliente, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task UpdateAsync(Usuarios usuario, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(Clientes cliente, CancellationToken cancellationToken = default)
     {
-        if (context.Entry(usuario).State == EntityState.Detached)
+        if (context.Entry(cliente).State == EntityState.Detached)
         {
-            context.Usuarios.Update(usuario);
+            context.Clientes.Update(cliente);
         }
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Usuarios usuario, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Clientes cliente, CancellationToken cancellationToken = default)
     {
-        context.Clientes.Remove(usuario.Clientes);
-
-        if (usuario.TokensAtualizacao != null && usuario.TokensAtualizacao.Any())
+        if (cliente.Usuario != null)
         {
-            context.TokensAtualizacao.RemoveRange(usuario.TokensAtualizacao);
+            if (cliente.Usuario.TokensAtualizacao != null && cliente.Usuario.TokensAtualizacao.Any())
+            {
+                context.TokensAtualizacao.RemoveRange(cliente.Usuario.TokensAtualizacao);
+            }
+            context.Usuarios.Remove(cliente.Usuario);
         }
 
-        context.Usuarios.Remove(usuario);
+        context.Clientes.Remove(cliente);
 
         try
         {
@@ -63,11 +64,11 @@ public sealed class ClienteRepository(DatabaseContext context) : IClienteReposit
 
     public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await context.Usuarios.AnyAsync(u => u.Email == email, cancellationToken);
+        return await context.Clientes.AnyAsync(c => c.Usuario.Email == email, cancellationToken);
     }
 
     public async Task<bool> ExistsByEmailExceptIdAsync(string email, Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Usuarios.AnyAsync(u => u.Email == email && u.Id != id, cancellationToken);
+        return await context.Clientes.AnyAsync(c => c.Usuario.Email == email && c.Id != id, cancellationToken);
     }
 }

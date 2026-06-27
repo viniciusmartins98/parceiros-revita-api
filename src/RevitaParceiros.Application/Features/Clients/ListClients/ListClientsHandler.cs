@@ -10,12 +10,12 @@ public sealed class ListClientsHandler(IClienteRepository clienteRepository)
     {
         var clientes = await clienteRepository.GetAllAsync(cancellationToken);
 
-        return clientes.Select(u => new ClientDto(
-            u.Id,
-            u.Nome,
-            u.Telefone,
-            u.Email,
-            u.Ativo,
-            u.CriadoEm)).ToList();
+        return clientes.Select(c => new ClientDto(
+            c.Id,
+            c.Usuario.Nome,
+            c.Usuario.Telefone,
+            c.Usuario.Email,
+            c.Usuario.Ativo,
+            c.Usuario.CriadoEm)).ToList();
     }
 }

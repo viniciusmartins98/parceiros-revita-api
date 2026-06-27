@@ -23,34 +23,35 @@ public sealed class CreateClientHandler(
         var initialPassword = "Revita@" + request.Name.Split(' ').FirstOrDefault()?.Replace(" ", "");
         var passwordHash = passwordHasher.Hash(initialPassword);
 
-        var usuario = new Usuarios
+        var cliente = new Clientes
         {
             Id = Guid.NewGuid(),
-            Nome = request.Name,
-            Email = request.Email,
-            Telefone = request.Phone,
-            SenhaHash = passwordHash,
-            Ativo = request.IsActive,
+            TotalPontos = 0,
             CriadoEm = dateTimeProvider.UtcNow,
-            Perfil = PerfilUsuarioEnum.Cliente,
-            Clientes = new Clientes
+            Usuario = new Usuarios
             {
                 Id = Guid.NewGuid(),
-                CriadoEm = dateTimeProvider.UtcNow
+                Nome = request.Name,
+                Email = request.Email,
+                Telefone = request.Phone,
+                SenhaHash = passwordHash,
+                Ativo = request.IsActive,
+                CriadoEm = dateTimeProvider.UtcNow,
+                Perfil = PerfilUsuarioEnum.Cliente
             }
         };
 
         // Link the relationship
-        usuario.Clientes.UsuarioId = usuario.Id;
+        cliente.UsuarioId = cliente.Usuario.Id;
 
-        await clienteRepository.AddAsync(usuario, cancellationToken);
+        await clienteRepository.AddAsync(cliente, cancellationToken);
 
         return new ClientDto(
-            usuario.Id,
-            usuario.Nome,
-            usuario.Telefone,
-            usuario.Email,
-            usuario.Ativo,
-            usuario.CriadoEm);
+            cliente.Id,
+            cliente.Usuario.Nome,
+            cliente.Usuario.Telefone,
+            cliente.Usuario.Email,
+            cliente.Usuario.Ativo,
+            cliente.Usuario.CriadoEm);
     }
 }

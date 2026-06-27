@@ -9,7 +9,6 @@ namespace RevitaParceiros.Application.Features.Auth.RegistrarCliente;
 
 public sealed class RegistrarClienteHandler(
     IUsuarioRepository usuarioRepository,
-    IClienteRepository clienteRepository,
     IPasswordHasher passwordHasher,
     IDateTimeProvider dateTimeProvider) : IRequestHandler<RegistrarClienteRequest, RegistrarClienteResponse>
 {
@@ -36,6 +35,7 @@ public sealed class RegistrarClienteHandler(
             Clientes = new Clientes
             {
                 Id = Guid.NewGuid(),
+                TotalPontos = 0,
                 CriadoEm = dateTimeProvider.UtcNow
             }
         };

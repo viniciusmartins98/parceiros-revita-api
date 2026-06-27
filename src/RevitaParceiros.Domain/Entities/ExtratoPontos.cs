@@ -12,7 +12,7 @@ public partial class ExtratoPontos
 {
     public Guid Id { get; set; }
 
-    public Guid ParceiroId { get; set; }
+    public Guid? ParceiroId { get; set; }
 
     public int Pontos { get; set; }
 
@@ -29,6 +29,10 @@ public partial class ExtratoPontos
     public string Descricao { get; set; }
 
     public DateTime CriadoEm { get; set; }
+
+    public Guid? ClienteId { get; set; }
+
+    public virtual Clientes Cliente { get; set; }
 
     public virtual Compras Compra { get; set; }
 

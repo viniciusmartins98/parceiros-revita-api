@@ -9,7 +9,6 @@ namespace RevitaParceiros.Application.Features.Auth.RegistrarParceiro;
 
 public sealed class RegistrarParceiroHandler(
     IUsuarioRepository usuarioRepository,
-    IParceiroRepository parceiroRepository,
     IPasswordHasher passwordHasher,
     IDateTimeProvider dateTimeProvider) : IRequestHandler<RegistrarParceiroRequest, RegistrarParceiroResponse>
 {

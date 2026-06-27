@@ -1,0 +1,94 @@
+using Mediator;
+using RevitaParceiros.Domain.Entities;
+using RevitaParceiros.Domain.Enums;
+using RevitaParceiros.Domain.Exceptions;
+using RevitaParceiros.Domain.Interfaces;
+
+namespace RevitaParceiros.Application.Features.Sales.RegisterSale;
+
+/// <summary>
+/// Handler responsável por registrar uma venda, calcular os pontos gerados
+/// com base na regra de pontuação ativa e atualizar o saldo do parceiro.
+/// </summary>
+public sealed class RegisterSaleCommandHandler(
+    ICompraRepository compraRepository,
+    IRegrasPontuacaoRepository regrasPontuacaoRepository,
+    IParceiroRepository parceiroRepository,
+    IClienteRepository clienteRepository
+) : IRequestHandler<RegisterSaleCommand, RegisterSaleResponse>
+{
+    public async ValueTask<RegisterSaleResponse> Handle(RegisterSaleCommand request, CancellationToken cancellationToken)
+    {
+        var parceiro = await parceiroRepository.GetByIdAsync(request.PartnerId, cancellationToken)
+            ?? throw new NotFoundException("Parceiro", request.PartnerId);
+
+        var cliente = await clienteRepository.GetByIdAsync(request.ClientId, cancellationToken)
+            ?? throw new NotFoundException("Cliente", request.ClientId);
+
+        var regraAtiva = await regrasPontuacaoRepository.GetActiveConfigAsync(cancellationToken)
+            ?? throw new BusinessRuleException("Não há regra de pontuação ativa configurada. Configure uma regra antes de registrar vendas.");
+
+        // Calcular pontos Parceiro
+        var pontosGeradosParceiro = (int)Math.Floor(request.Amount / regraAtiva.ValorCompraMinimoParceiro) * regraAtiva.PontosPorValorParceiro;
+
+        // Calcular pontos Cliente
+        var pontosGeradosCliente = (int)Math.Floor(request.Amount / regraAtiva.ValorCompraMinimoCliente) * regraAtiva.PontosPorValorCliente;
+
+        var compra = new Compras
+        {
+            Id = Guid.NewGuid(),
+            ClienteId = cliente.Id,
+            ParceiroId = parceiro.Id,
+            RegistradoPor = request.RegisteredByUserId,
+            Valor = request.Amount,
+            DataCompra = DateTime.UtcNow,
+            PontosGeradosParceiro = pontosGeradosParceiro,
+            PontosGeradosCliente = pontosGeradosCliente,
+            CriadoEm = DateTime.UtcNow
+        };
+
+        var extratos = new List<ExtratoPontos>();
+
+        if (pontosGeradosParceiro > 0)
+        {
+            extratos.Add(new ExtratoPontos
+            {
+                Id = Guid.NewGuid(),
+                ParceiroId = parceiro.Id,
+                ClienteId = null,
+                TipoTransacao = TipoTransacaoPontosEnum.Ganho,
+                Pontos = pontosGeradosParceiro,
+                CompraId = compra.Id,
+                Descricao = $"Pontos de indicação gerados pela venda de R$ {request.Amount:N2}",
+                CriadoEm = DateTime.UtcNow
+            });
+            parceiro.TotalPontos += pontosGeradosParceiro;
+        }
+
+        if (pontosGeradosCliente > 0)
+        {
+            extratos.Add(new ExtratoPontos
+            {
+                Id = Guid.NewGuid(),
+                ParceiroId = null,
+                ClienteId = cliente.Id,
+                TipoTransacao = TipoTransacaoPontosEnum.Ganho,
+                Pontos = pontosGeradosCliente,
+                CompraId = compra.Id,
+                Descricao = $"Pontos de cashback gerados pela compra de R$ {request.Amount:N2}",
+                CriadoEm = DateTime.UtcNow
+            });
+            cliente.TotalPontos += pontosGeradosCliente;
+        }
+
+        await compraRepository.RegisterSaleAsync(compra, extratos, parceiro, cliente, cancellationToken);
+
+        return new RegisterSaleResponse(
+            compra.Id,
+            compra.Valor,
+            request.PartnerId,
+            request.ClientId,
+            pontosGeradosParceiro + pontosGeradosCliente,
+            compra.CriadoEm);
+    }
+}
