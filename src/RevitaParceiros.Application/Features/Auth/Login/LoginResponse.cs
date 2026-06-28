@@ -8,5 +8,7 @@ public sealed record LoginResponse(
 
 public sealed record UserInfo(
     Guid Id,
+    Guid? PartnerId,
+    Guid? ClientId,
     string Nome,
     string Perfil);

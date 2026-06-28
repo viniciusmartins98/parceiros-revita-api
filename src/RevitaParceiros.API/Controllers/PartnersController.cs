@@ -6,6 +6,7 @@ using RevitaParceiros.Application.Features.Partners.DeletePartner;
 using RevitaParceiros.Application.Features.Partners.GetPartnerById;
 using RevitaParceiros.Application.Features.Partners.ListPartners;
 using RevitaParceiros.Application.Features.Partners.UpdatePartner;
+using System.Security.Claims;
 
 namespace RevitaParceiros.API.Controllers;
 
@@ -20,10 +21,16 @@ public class PartnersController(IServiceProvider provider) : ControllerBase<Part
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Administrador,Funcionario")]
+    [Authorize(Roles = "Administrador,Funcionario,Parceiro")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetPartnerByIdRequest(id), cancellationToken);
+
+        if (User.IsInRole("Parceiro") && result.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier))
+        {
+            return Forbid();
+        }
+
         return Ok(result);
     }
 

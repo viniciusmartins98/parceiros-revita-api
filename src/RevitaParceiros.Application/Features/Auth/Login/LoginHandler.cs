@@ -52,6 +52,12 @@ public sealed class LoginHandler(
             AccessToken: accessToken,
             RefreshToken: refreshTokenString,
             ExpiresAt: expiresAt,
-            User: new UserInfo(usuario.Id, usuario.Nome, usuario.Perfil.ToString()));
+            User: new UserInfo(
+                usuario.Id,
+                usuario?.Parceiros?.Id,
+                usuario?.Clientes?.Id,
+                usuario.Nome,
+                usuario.Perfil.ToString())
+            );
     }
 }

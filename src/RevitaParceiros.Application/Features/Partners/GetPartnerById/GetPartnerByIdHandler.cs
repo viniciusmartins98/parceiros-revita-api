@@ -14,9 +14,11 @@ public sealed class GetPartnerByIdHandler(IParceiroRepository parceiroRepository
 
         return new PartnerDto(
             parceiro.Id,
+            parceiro.UsuarioId,
             parceiro.Usuario.Nome,
             parceiro.Usuario.Telefone,
             parceiro.Usuario.Email,
+            parceiro.TotalPontos,
             parceiro.Usuario.Ativo,
             parceiro.Usuario.CriadoEm);
     }

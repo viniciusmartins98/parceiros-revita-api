@@ -85,6 +85,12 @@ public sealed class RefreshTokenHandler(
             AccessToken: newAccessToken,
             RefreshToken: newRefreshTokenString,
             ExpiresAt: expiresAt,
-            User: new UserInfo(usuario.Id, usuario.Nome, perfil));
+            User: new UserInfo(
+                usuario.Id,
+                usuario.Parceiros?.Id,
+                usuario.Clientes?.Id,
+                usuario.Nome,
+                perfil)
+            );
     }
 }

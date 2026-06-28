@@ -14,9 +14,11 @@ public sealed class GetClientByIdHandler(IClienteRepository clienteRepository)
 
         return new ClientDto(
             cliente.Id,
+            cliente.UsuarioId,
             cliente.Usuario.Nome,
             cliente.Usuario.Telefone,
             cliente.Usuario.Email,
+            cliente.TotalPontos,
             cliente.Usuario.Ativo,
             cliente.Usuario.CriadoEm);
     }

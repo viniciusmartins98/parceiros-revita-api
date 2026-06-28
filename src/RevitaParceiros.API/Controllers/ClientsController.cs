@@ -5,6 +5,8 @@ using RevitaParceiros.Application.Features.Clients.DeleteClient;
 using RevitaParceiros.Application.Features.Clients.GetClientById;
 using RevitaParceiros.Application.Features.Clients.ListClients;
 using RevitaParceiros.Application.Features.Clients.UpdateClient;
+using RevitaParceiros.Domain.Enums;
+using System.Security.Claims;
 
 namespace RevitaParceiros.API.Controllers;
 
@@ -19,10 +21,16 @@ public class ClientsController(IServiceProvider provider) : ControllerBase<Clien
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Administrador,Funcionario")]
+    [Authorize(Roles = "Administrador,Funcionario,Cliente")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetClientByIdRequest(id), cancellationToken);
+
+        if (User.IsInRole("Cliente") && result.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier))
+        {
+            return Forbid();
+        }
+
         return Ok(result);
     }
 

@@ -12,9 +12,11 @@ public sealed class ListClientsHandler(IClienteRepository clienteRepository)
 
         return clientes.Select(c => new ClientDto(
             c.Id,
+            c.UsuarioId,
             c.Usuario.Nome,
             c.Usuario.Telefone,
             c.Usuario.Email,
+            c.TotalPontos,
             c.Usuario.Ativo,
             c.Usuario.CriadoEm)).ToList();
     }

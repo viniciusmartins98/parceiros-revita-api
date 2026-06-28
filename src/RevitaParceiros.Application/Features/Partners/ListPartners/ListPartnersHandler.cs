@@ -12,9 +12,11 @@ public sealed class ListPartnersHandler(IParceiroRepository parceiroRepository)
 
         return parceiros.Select(p => new PartnerDto(
             p.Id,
+            p.UsuarioId,
             p.Usuario.Nome,
             p.Usuario.Telefone,
             p.Usuario.Email,
+            p.TotalPontos,
             p.Usuario.Ativo,
             p.Usuario.CriadoEm)).ToList();
     }
