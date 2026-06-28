@@ -79,7 +79,7 @@ public sealed class UsuarioRepository(DatabaseContext context) : IUsuarioReposit
         }
 
         context.Usuarios.Remove(usuario);
-        
+
         try
         {
             await context.SaveChangesAsync(ct);

@@ -1,4 +1,3 @@
-using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RevitaParceiros.Application.Features.Users.CreateUser;

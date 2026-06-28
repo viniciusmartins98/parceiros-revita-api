@@ -30,7 +30,8 @@ public sealed class CompraRepository(DatabaseContext context) : ICompraRepositor
         var result = await context.Compras
             .Where(c => c.ParceiroId == parceiroId)
             .GroupBy(c => c.ParceiroId)
-            .Select(g => new { 
+            .Select(g => new
+            {
                 TotalAmount = g.Sum(c => c.Valor),
                 TotalPoints = g.Sum(c => c.PontosGeradosParceiro)
             })
@@ -44,7 +45,8 @@ public sealed class CompraRepository(DatabaseContext context) : ICompraRepositor
         var result = await context.Compras
             .Where(c => c.ClienteId == clienteId)
             .GroupBy(c => c.ClienteId)
-            .Select(g => new { 
+            .Select(g => new
+            {
                 TotalAmount = g.Sum(c => c.Valor),
                 TotalPoints = g.Sum(c => c.PontosGeradosCliente)
             })

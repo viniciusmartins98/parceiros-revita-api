@@ -25,12 +25,12 @@ public class LoginHandlerTests
         _jwtTokenService = Substitute.For<IJwtTokenService>();
         _passwordHasher = Substitute.For<IPasswordHasher>();
         _dateTimeProvider = Substitute.For<IDateTimeProvider>();
-        
+
         _handler = new LoginHandler(
-            _usuarioRepository, 
-            _refreshTokenRepository, 
-            _jwtTokenService, 
-            _passwordHasher, 
+            _usuarioRepository,
+            _refreshTokenRepository,
+            _jwtTokenService,
+            _passwordHasher,
             _dateTimeProvider);
     }
 
@@ -40,7 +40,7 @@ public class LoginHandlerTests
         // Arrange
         var request = new LoginRequest("teste@teste.com", "senha123");
         var usuario = new Usuarios { Id = Guid.NewGuid(), Nome = "Teste", Email = request.Login, SenhaHash = "hash", Ativo = true };
-        
+
         _usuarioRepository.GetByEmailAsync(request.Login, Arg.Any<CancellationToken>()).Returns(usuario);
         _passwordHasher.Verify(request.Senha, usuario.SenhaHash).Returns(true);
         _jwtTokenService.GenerateAccessToken(usuario.Id, usuario.Nome, Arg.Any<string>()).Returns("access_token");
@@ -63,7 +63,7 @@ public class LoginHandlerTests
         // Arrange
         var request = new LoginRequest("teste@teste.com", "senha_errada");
         var usuario = new Usuarios { Id = Guid.NewGuid(), Nome = "Teste", Email = request.Login, SenhaHash = "hash", Ativo = true };
-        
+
         _usuarioRepository.GetByEmailAsync(request.Login, Arg.Any<CancellationToken>()).Returns(usuario);
         _passwordHasher.Verify(request.Senha, usuario.SenhaHash).Returns(false);
 
@@ -74,14 +74,14 @@ public class LoginHandlerTests
         await act.Should().ThrowAsync<UnauthorizedException>()
             .WithMessage("Login ou senha incorretos.");
     }
-    
+
     [Fact]
     public async Task Login_WithInactiveUser_ThrowsUnauthorizedException()
     {
         // Arrange
         var request = new LoginRequest("teste@teste.com", "senha123");
         var usuario = new Usuarios { Id = Guid.NewGuid(), Nome = "Teste", Email = request.Login, SenhaHash = "hash", Ativo = false }; // Inativo
-        
+
         _usuarioRepository.GetByEmailAsync(request.Login, Arg.Any<CancellationToken>()).Returns(usuario);
         _passwordHasher.Verify(request.Senha, usuario.SenhaHash).Returns(true);
 

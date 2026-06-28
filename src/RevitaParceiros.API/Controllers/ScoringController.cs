@@ -1,12 +1,10 @@
-using System.Security.Claims;
-using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RevitaParceiros.Application.Features.Scoring;
-using RevitaParceiros.Application.Features.Scoring.GetPartnerConfig;
-using RevitaParceiros.Application.Features.Scoring.SavePartnerConfig;
 using RevitaParceiros.Application.Features.Scoring.GetClientConfig;
+using RevitaParceiros.Application.Features.Scoring.GetPartnerConfig;
 using RevitaParceiros.Application.Features.Scoring.SaveClientConfig;
+using RevitaParceiros.Application.Features.Scoring.SavePartnerConfig;
 
 namespace RevitaParceiros.API.Controllers;
 

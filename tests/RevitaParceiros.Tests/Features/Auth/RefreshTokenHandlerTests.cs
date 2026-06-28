@@ -23,11 +23,11 @@ public class RefreshTokenHandlerTests
         _usuarioRepository = Substitute.For<IUsuarioRepository>();
         _jwtTokenService = Substitute.For<IJwtTokenService>();
         _dateTimeProvider = Substitute.For<IDateTimeProvider>();
-        
+
         _handler = new RefreshTokenHandler(
-            _refreshTokenRepository, 
-            _usuarioRepository, 
-            _jwtTokenService, 
+            _refreshTokenRepository,
+            _usuarioRepository,
+            _jwtTokenService,
             _dateTimeProvider);
     }
 

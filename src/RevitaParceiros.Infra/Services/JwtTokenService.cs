@@ -1,10 +1,10 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using RevitaParceiros.Application.Common.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using RevitaParceiros.Application.Common.Interfaces;
 
 namespace RevitaParceiros.Infra.Services;
 
@@ -13,11 +13,11 @@ public sealed class JwtTokenService(IConfiguration configuration) : IJwtTokenSer
     public string GenerateAccessToken(Guid userId, string name, string role)
     {
         var jwtSection = configuration.GetSection("Jwt");
-        var secretKey = jwtSection["SecretKey"] 
+        var secretKey = jwtSection["SecretKey"]
             ?? throw new InvalidOperationException("SecretKey não configurada.");
         var issuer = jwtSection["Issuer"] ?? "RevitaParceiros";
         var audience = jwtSection["Audience"] ?? "RevitaParceirosApp";
-        
+
         if (!int.TryParse(jwtSection["AccessTokenExpirationMinutes"], out var expirationMinutes))
         {
             expirationMinutes = 15; // default fallback
@@ -56,7 +56,7 @@ public sealed class JwtTokenService(IConfiguration configuration) : IJwtTokenSer
     public Guid? GetUserIdFromExpiredToken(string token)
     {
         var jwtSection = configuration.GetSection("Jwt");
-        var secretKey = jwtSection["SecretKey"] 
+        var secretKey = jwtSection["SecretKey"]
             ?? throw new InvalidOperationException("SecretKey não configurada.");
         var issuer = jwtSection["Issuer"] ?? "RevitaParceiros";
         var audience = jwtSection["Audience"] ?? "RevitaParceirosApp";
@@ -76,7 +76,7 @@ public sealed class JwtTokenService(IConfiguration configuration) : IJwtTokenSer
         try
         {
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
-            
+
             if (securityToken is not JwtSecurityToken jwtSecurityToken ||
                 !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -84,7 +84,7 @@ public sealed class JwtTokenService(IConfiguration configuration) : IJwtTokenSer
             }
 
             var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier) ?? principal.FindFirst(JwtRegisteredClaimNames.Sub);
-            
+
             if (userIdClaim != null && Guid.TryParse(userIdClaim.Value, out var userId))
             {
                 return userId;

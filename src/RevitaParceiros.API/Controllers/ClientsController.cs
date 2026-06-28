@@ -5,8 +5,6 @@ using RevitaParceiros.Application.Features.Clients.DeleteClient;
 using RevitaParceiros.Application.Features.Clients.GetClientById;
 using RevitaParceiros.Application.Features.Clients.ListClients;
 using RevitaParceiros.Application.Features.Clients.UpdateClient;
-using RevitaParceiros.Domain.Enums;
-using System.Security.Claims;
 
 namespace RevitaParceiros.API.Controllers;
 

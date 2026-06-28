@@ -45,7 +45,7 @@ public sealed class LoginHandler(
 
         // Revoga os antigos para manter o banco limpo e apenas uma sessão por usuário (opcional, mas bom padrão)
         await refreshTokenRepository.RevokeAllByUserIdAsync(usuario.Id, cancellationToken);
-        
+
         await refreshTokenRepository.AddAsync(refreshToken, cancellationToken);
 
         return new LoginResponse(

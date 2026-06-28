@@ -1,5 +1,4 @@
 using RevitaParceiros.Application.Common.Interfaces;
-using BCrypt.Net;
 
 namespace RevitaParceiros.Infra.Services;
 

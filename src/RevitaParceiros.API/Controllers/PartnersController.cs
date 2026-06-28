@@ -1,4 +1,3 @@
-using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RevitaParceiros.Application.Features.Partners.CreatePartner;
@@ -6,7 +5,6 @@ using RevitaParceiros.Application.Features.Partners.DeletePartner;
 using RevitaParceiros.Application.Features.Partners.GetPartnerById;
 using RevitaParceiros.Application.Features.Partners.ListPartners;
 using RevitaParceiros.Application.Features.Partners.UpdatePartner;
-using System.Security.Claims;
 
 namespace RevitaParceiros.API.Controllers;
 

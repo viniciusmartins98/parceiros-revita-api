@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
 using RevitaParceiros.Application.Common.Interfaces;
-using RevitaParceiros.Domain.Enums;
 using RevitaParceiros.Infra.Persistence;
 using RevitaParceiros.Infra.Services;
 

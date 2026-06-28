@@ -1,8 +1,8 @@
-using System.Net;
-using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using RevitaParceiros.Domain.Exceptions;
+using System.Net;
+using System.Text.Json;
 
 namespace RevitaParceiros.API.Middlewares;
 

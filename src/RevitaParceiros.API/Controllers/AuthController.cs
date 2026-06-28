@@ -7,7 +7,6 @@ using RevitaParceiros.Application.Features.Auth.RegistrarCliente;
 using RevitaParceiros.Application.Features.Auth.RegistrarParceiro;
 using RevitaParceiros.Application.Features.Clients.GetClientByUserId;
 using RevitaParceiros.Application.Features.Clients.GetPartnerByUserId;
-using System.Security.Claims;
 
 namespace RevitaParceiros.API.Controllers;
 

@@ -56,7 +56,7 @@ public sealed class RefreshTokenHandler(
         {
             perfil = perfilProp.GetValue(usuario)?.ToString() ?? "Cliente";
         }
-        else 
+        else
         {
             if (usuario.Id.ToString() == "00000000-0000-0000-0000-000000000000")
                 perfil = "Administrador";

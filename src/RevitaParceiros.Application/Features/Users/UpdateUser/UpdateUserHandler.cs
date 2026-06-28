@@ -30,7 +30,7 @@ public sealed class UpdateUserHandler(
         user.Nome = request.Name;
         user.Ativo = request.IsActive;
         user.AtualizadoEm = dateTimeProvider.UtcNow;
-        
+
         var oldRole = user.Perfil;
         user.Perfil = request.Role;
 
@@ -43,11 +43,11 @@ public sealed class UpdateUserHandler(
         // We will keep it simple for now, as usually role changing is complex.
         if (user.Funcionarios == null && (request.Role == PerfilUsuarioEnum.Administrador || request.Role == PerfilUsuarioEnum.Funcionario))
         {
-             user.Funcionarios = new Funcionarios
-             {
-                 UsuarioId = user.Id,
-                 CriadoEm = dateTimeProvider.UtcNow
-             };
+            user.Funcionarios = new Funcionarios
+            {
+                UsuarioId = user.Id,
+                CriadoEm = dateTimeProvider.UtcNow
+            };
         }
 
         await usuarioRepository.UpdateAsync(user, cancellationToken);

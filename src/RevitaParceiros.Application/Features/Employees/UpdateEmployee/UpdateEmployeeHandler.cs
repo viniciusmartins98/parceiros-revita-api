@@ -13,7 +13,7 @@ public sealed class UpdateEmployeeHandler(
     public async ValueTask<EmployeeDto> Handle(UpdateEmployeeRequest request, CancellationToken cancellationToken)
     {
         var usuario = await funcionarioRepository.GetByIdAsync(request.Id, cancellationToken);
-        
+
         if (usuario is null)
         {
             throw new NotFoundException("Funcionário não encontrado.");
