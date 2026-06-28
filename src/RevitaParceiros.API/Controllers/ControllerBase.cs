@@ -1,6 +1,7 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace RevitaParceiros.API.Controllers
 {
@@ -16,5 +17,8 @@ namespace RevitaParceiros.API.Controllers
 
         private IMediator _mediator;
         protected IMediator Mediator => _mediator ??= _serviceProvider.GetRequiredService<IMediator>();
+
+        private string? _userId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+        protected Guid? UserId => _userId != null ? new Guid(_userId) : null;
     }
 }

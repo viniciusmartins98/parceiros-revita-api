@@ -24,6 +24,16 @@ public sealed class ParceiroRepository(DatabaseContext context) : IParceiroRepos
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
+    public async Task<Parceiros?> GetByUserIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.Parceiros
+            .Include(p => p.Usuario)
+            .ThenInclude(u => u.TokensAtualizacao)
+            .Include(u => u.Compras)
+            .Include(u => u.ExtratoPontos)
+            .FirstOrDefaultAsync(p => p.Usuario.Id == id, cancellationToken);
+    }
+
     public async Task AddAsync(Parceiros parceiro, CancellationToken cancellationToken = default)
     {
         await context.Parceiros.AddAsync(parceiro, cancellationToken);

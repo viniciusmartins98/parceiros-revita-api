@@ -19,19 +19,11 @@ public class SalesController(IServiceProvider provider) : ControllerBase<SalesCo
     [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> RegisterSale([FromBody] RegisterSaleRequest request, CancellationToken cancellationToken)
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            ?? User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
-
-        if (!Guid.TryParse(userIdString, out var userId))
-        {
-            return Unauthorized();
-        }
-
         var command = new RegisterSaleCommand(
             request.Amount,
             request.PartnerId,
             request.ClientId,
-            userId
+            UserId!.Value
         );
 
         var result = await Mediator.Send(command, cancellationToken);

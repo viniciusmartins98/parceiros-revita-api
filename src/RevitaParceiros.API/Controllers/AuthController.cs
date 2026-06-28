@@ -5,6 +5,9 @@ using RevitaParceiros.Application.Features.Auth.Logout;
 using RevitaParceiros.Application.Features.Auth.RefreshToken;
 using RevitaParceiros.Application.Features.Auth.RegistrarCliente;
 using RevitaParceiros.Application.Features.Auth.RegistrarParceiro;
+using RevitaParceiros.Application.Features.Clients.GetClientByUserId;
+using RevitaParceiros.Application.Features.Clients.GetPartnerByUserId;
+using System.Security.Claims;
 
 namespace RevitaParceiros.API.Controllers;
 
@@ -63,5 +66,27 @@ public class AuthController(IServiceProvider serviceProvider) : ControllerBase<A
     {
         await Mediator.Send(request);
         return Ok();
+    }
+
+    [HttpGet("client")]
+    [Authorize(Roles = "Cliente")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> GetAuthenticatedClient()
+    {
+        var result = await Mediator.Send(new GetClientByUserIdRequest(UserId!.Value));
+        return Ok(result);
+    }
+
+    [HttpGet("partner")]
+    [Authorize(Roles = "Parceiro")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> GetAuthenticatedPartner()
+    {
+        var result = await Mediator.Send(new GetPartnerByUserIdRequest(UserId!.Value));
+        return Ok(result);
     }
 }

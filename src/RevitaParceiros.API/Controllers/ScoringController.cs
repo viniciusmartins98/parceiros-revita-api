@@ -23,18 +23,12 @@ public class ScoringController(IServiceProvider provider) : ControllerBase<Scori
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> SavePartnerConfig([FromBody] ScoringConfigDto request, CancellationToken cancellationToken)
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
-        if (!Guid.TryParse(userIdString, out var userId))
-        {
-            return Unauthorized();
-        }
-
         var command = new SavePartnerConfigCommand(
             request.PurchaseAmountPerPoint,
             request.PointsGenerated,
             request.PointsForRedemption,
             request.RedemptionValue,
-            userId
+            UserId!.Value
         );
 
         var result = await Mediator.Send(command, cancellationToken);
@@ -52,18 +46,12 @@ public class ScoringController(IServiceProvider provider) : ControllerBase<Scori
     [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> SaveClientConfig([FromBody] ScoringConfigDto request, CancellationToken cancellationToken)
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
-        if (!Guid.TryParse(userIdString, out var userId))
-        {
-            return Unauthorized();
-        }
-
         var command = new SaveClientConfigCommand(
             request.PurchaseAmountPerPoint,
             request.PointsGenerated,
             request.PointsForRedemption,
             request.RedemptionValue,
-            userId
+            UserId!.Value
         );
 
         var result = await Mediator.Send(command, cancellationToken);

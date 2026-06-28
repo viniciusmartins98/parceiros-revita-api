@@ -21,16 +21,10 @@ public class PartnersController(IServiceProvider provider) : ControllerBase<Part
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Administrador,Funcionario,Parceiro")]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetPartnerByIdRequest(id), cancellationToken);
-
-        if (User.IsInRole("Parceiro") && result.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier))
-        {
-            return Forbid();
-        }
-
         return Ok(result);
     }
 

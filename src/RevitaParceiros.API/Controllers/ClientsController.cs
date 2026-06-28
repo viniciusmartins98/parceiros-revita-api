@@ -21,16 +21,10 @@ public class ClientsController(IServiceProvider provider) : ControllerBase<Clien
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Administrador,Funcionario,Cliente")]
+    [Authorize(Roles = "Administrador,Funcionario")]
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new GetClientByIdRequest(id), cancellationToken);
-
-        if (User.IsInRole("Cliente") && result.UserId.ToString() != User.FindFirstValue(ClaimTypes.NameIdentifier))
-        {
-            return Forbid();
-        }
-
         return Ok(result);
     }
 

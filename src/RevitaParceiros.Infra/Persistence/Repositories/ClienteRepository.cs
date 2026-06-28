@@ -21,7 +21,19 @@ public sealed class ClienteRepository(DatabaseContext context) : IClienteReposit
         return await context.Clientes
             .Include(c => c.Usuario)
             .ThenInclude(u => u.TokensAtualizacao)
+            .Include(c => c.Compras)
+            .Include(c => c.ExtratoPontos)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+    }
+
+    public async Task<Clientes?> GetByUserIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.Clientes
+            .Include(c => c.Usuario)
+            .ThenInclude(u => u.TokensAtualizacao)
+            .Include(c => c.Compras)
+            .Include(c => c.ExtratoPontos)
+            .FirstOrDefaultAsync(c => c.Usuario.Id == id, cancellationToken);
     }
 
     public async Task AddAsync(Clientes cliente, CancellationToken cancellationToken = default)
