@@ -298,6 +298,8 @@ public partial class DatabaseContext : DbContext
 
             entity.ToTable("resgates", tb => tb.HasComment("Solicitações de resgate de bônus pelos parceiros."));
 
+            entity.HasIndex(e => e.ClienteId, "ix_resgates_cliente");
+
             entity.HasIndex(e => e.CriadoEm, "ix_resgates_criado_em").IsDescending();
 
             entity.HasIndex(e => e.ParceiroId, "ix_resgates_parceiro");
@@ -311,6 +313,7 @@ public partial class DatabaseContext : DbContext
                 .HasComment("Administrador/Funcionário que aprovou o resgate.")
                 .HasColumnName("aprovado_por");
             entity.Property(e => e.AtualizadoEm).HasColumnName("atualizado_em");
+            entity.Property(e => e.ClienteId).HasColumnName("cliente_id");
             entity.Property(e => e.CriadoEm)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("criado_em");
@@ -333,6 +336,11 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.AprovadoPor)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_resgates_aprovado_por");
+
+            entity.HasOne(d => d.Cliente).WithMany(p => p.Resgates)
+                .HasForeignKey(d => d.ClienteId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_resgates_cliente");
 
             entity.HasOne(d => d.Parceiro).WithMany(p => p.Resgates)
                 .HasForeignKey(d => d.ParceiroId)

@@ -27,5 +27,7 @@ public partial class Clientes
 
     public virtual ICollection<ExtratoPontos> ExtratoPontos { get; set; } = new List<ExtratoPontos>();
 
+    public virtual ICollection<Resgates> Resgates { get; set; } = new List<Resgates>();
+
     public virtual Usuarios Usuario { get; set; }
 }

@@ -23,4 +23,10 @@ public sealed class ExtratoPontosRepository(DatabaseContext context) : IExtratoP
             .OrderByDescending(e => e.CriadoEm)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task AddAsync(ExtratoPontos extrato, CancellationToken cancellationToken = default)
+    {
+        await context.ExtratoPontos.AddAsync(extrato, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+    }
 }

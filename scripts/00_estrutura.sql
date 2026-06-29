@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS extrato_pontos (
         FOREIGN KEY (compra_id) REFERENCES compras (id) ON DELETE RESTRICT,
 
     -- Check
-    CONSTRAINT ck_extrato_pontos CHECK (pontos > 0)
+    CONSTRAINT ck_extrato_pontos CHECK (pontos != 0)
 );
 
 COMMENT ON TABLE  extrato_pontos                  IS 'Ledger imutável — registra toda movimentação de pontos (geração e resgate).';

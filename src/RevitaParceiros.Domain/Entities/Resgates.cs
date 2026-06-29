@@ -12,7 +12,7 @@ public partial class Resgates
 {
     public Guid Id { get; set; }
 
-    public Guid ParceiroId { get; set; }
+    public Guid? ParceiroId { get; set; }
 
     public int PontosResgatados { get; set; }
 
@@ -29,7 +29,11 @@ public partial class Resgates
 
     public DateTime? AtualizadoEm { get; set; }
 
+    public Guid? ClienteId { get; set; }
+
     public virtual Usuarios AprovadoPorNavigation { get; set; }
+
+    public virtual Clientes Cliente { get; set; }
 
     public virtual Parceiros Parceiro { get; set; }
 }

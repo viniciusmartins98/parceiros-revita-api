@@ -6,4 +6,5 @@ public interface IExtratoPontosRepository
 {
     Task<IReadOnlyCollection<ExtratoPontos>> GetByClientIdAsync(Guid clientId, CancellationToken cancellationToken = default);
     Task<IReadOnlyCollection<ExtratoPontos>> GetByPartnerIdAsync(Guid partnerId, CancellationToken cancellationToken = default);
+    Task AddAsync(ExtratoPontos extrato, CancellationToken cancellationToken = default);
 }
