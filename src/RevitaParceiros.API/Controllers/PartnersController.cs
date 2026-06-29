@@ -5,6 +5,8 @@ using RevitaParceiros.Application.Features.Partners.DeletePartner;
 using RevitaParceiros.Application.Features.Partners.GetPartnerById;
 using RevitaParceiros.Application.Features.Partners.ListPartners;
 using RevitaParceiros.Application.Features.Partners.UpdatePartner;
+using RevitaParceiros.Application.Features.Points.ListPartnerPointsHistory;
+using RevitaParceiros.Application.Features.Sales.ListPartnerSales;
 
 namespace RevitaParceiros.API.Controllers;
 
@@ -49,5 +51,21 @@ public class PartnersController(IServiceProvider provider) : ControllerBase<Part
     {
         await Mediator.Send(new DeletePartnerRequest(id), cancellationToken);
         return NoContent();
+    }
+
+    [HttpGet("{id:guid}/sales")]
+    [Authorize(Roles = "Administrador,Funcionario,Parceiro")]
+    public async Task<IActionResult> GetSales([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new ListPartnerSalesQuery(id), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/points-history")]
+    [Authorize(Roles = "Administrador,Funcionario,Parceiro")]
+    public async Task<IActionResult> GetPointsHistory([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new ListPartnerPointsHistoryQuery(id), cancellationToken);
+        return Ok(result);
     }
 }

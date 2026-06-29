@@ -5,6 +5,8 @@ using RevitaParceiros.Application.Features.Clients.DeleteClient;
 using RevitaParceiros.Application.Features.Clients.GetClientById;
 using RevitaParceiros.Application.Features.Clients.ListClients;
 using RevitaParceiros.Application.Features.Clients.UpdateClient;
+using RevitaParceiros.Application.Features.Points.ListClientPointsHistory;
+using RevitaParceiros.Application.Features.Sales.ListClientSales;
 
 namespace RevitaParceiros.API.Controllers;
 
@@ -49,5 +51,21 @@ public class ClientsController(IServiceProvider provider) : ControllerBase<Clien
     {
         await Mediator.Send(new DeleteClientRequest(id), cancellationToken);
         return NoContent();
+    }
+
+    [HttpGet("{id:guid}/sales")]
+    [Authorize(Roles = "Administrador,Funcionario,Cliente")]
+    public async Task<IActionResult> GetSales([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new ListClientSalesQuery(id), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/points-history")]
+    [Authorize(Roles = "Administrador,Funcionario,Cliente")]
+    public async Task<IActionResult> GetPointsHistory([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new ListClientPointsHistoryQuery(id), cancellationToken);
+        return Ok(result);
     }
 }

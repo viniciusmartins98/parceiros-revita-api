@@ -43,6 +43,7 @@ public static class DependencyInjection
         services.AddScoped<Domain.Interfaces.IRefreshTokenRepository, RevitaParceiros.Infra.Persistence.Repositories.RefreshTokenRepository>();
         services.AddScoped<Domain.Interfaces.IRegrasPontuacaoRepository, RevitaParceiros.Infra.Persistence.Repositories.RegrasPontuacaoRepository>();
         services.AddScoped<Domain.Interfaces.ICompraRepository, RevitaParceiros.Infra.Persistence.Repositories.CompraRepository>();
+        services.AddScoped<Domain.Interfaces.IExtratoPontosRepository, RevitaParceiros.Infra.Persistence.Repositories.ExtratoPontosRepository>();
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 

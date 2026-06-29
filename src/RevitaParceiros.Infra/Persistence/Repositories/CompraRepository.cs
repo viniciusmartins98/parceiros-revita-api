@@ -54,4 +54,30 @@ public sealed class CompraRepository(DatabaseContext context) : ICompraRepositor
 
         return (result?.TotalAmount ?? 0m, result?.TotalPoints ?? 0);
     }
+
+    public async Task<IReadOnlyCollection<Compras>> GetByClientIdAsync(Guid clientId, CancellationToken cancellationToken = default)
+    {
+        return await context.Compras
+            .AsNoTracking()
+            .Include(c => c.Parceiro)
+                .ThenInclude(p => p.Usuario)
+            .Include(c => c.Cliente)
+                .ThenInclude(c => c.Usuario)
+            .Where(c => c.ClienteId == clientId)
+            .OrderByDescending(c => c.DataCompra)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyCollection<Compras>> GetByPartnerIdAsync(Guid partnerId, CancellationToken cancellationToken = default)
+    {
+        return await context.Compras
+            .AsNoTracking()
+            .Include(c => c.Parceiro)
+                .ThenInclude(p => p.Usuario)
+            .Include(c => c.Cliente)
+                .ThenInclude(c => c.Usuario)
+            .Where(c => c.ParceiroId == partnerId)
+            .OrderByDescending(c => c.DataCompra)
+            .ToListAsync(cancellationToken);
+    }
 }

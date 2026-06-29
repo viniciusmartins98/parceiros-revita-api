@@ -21,4 +21,8 @@ public interface ICompraRepository
     Task<(decimal TotalAmount, int TotalPoints)> GetPartnerAccumulatedAsync(Guid parceiroId, CancellationToken cancellationToken = default);
 
     Task<(decimal TotalAmount, int TotalPoints)> GetClientAccumulatedAsync(Guid clienteId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyCollection<Compras>> GetByClientIdAsync(Guid clientId, CancellationToken cancellationToken = default);
+    
+    Task<IReadOnlyCollection<Compras>> GetByPartnerIdAsync(Guid partnerId, CancellationToken cancellationToken = default);
 }
