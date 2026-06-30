@@ -2,6 +2,7 @@ using RevitaParceiros.API.Extensions;
 using RevitaParceiros.API.Middlewares;
 using RevitaParceiros.Application;
 using RevitaParceiros.Infra;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,5 +45,10 @@ app.UseAuthorization();
 
 // Controllers
 app.MapControllers();
+
+// Culture
+var BR = new CultureInfo("pt-BR");
+CultureInfo.DefaultThreadCurrentCulture = BR;
+CultureInfo.DefaultThreadCurrentUICulture = BR;
 
 app.Run();
