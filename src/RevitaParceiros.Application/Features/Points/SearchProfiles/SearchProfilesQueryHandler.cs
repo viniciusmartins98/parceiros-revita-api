@@ -22,7 +22,7 @@ public class SearchProfilesQueryHandler(
         {
             if (string.IsNullOrEmpty(term) || client.Usuario.Nome.ToLowerInvariant().Contains(term))
             {
-                profiles.Add(new ProfileDto(client.Id, client.Usuario.Nome, PerfilUsuarioEnum.Cliente, client.TotalPontos));
+                profiles.Add(new ProfileDto(client.Id, client.Usuario.Nome, client.Usuario.Email, PerfilUsuarioEnum.Cliente, client.TotalPontos));
             }
         }
 
@@ -30,7 +30,7 @@ public class SearchProfilesQueryHandler(
         {
             if (string.IsNullOrEmpty(term) || partner.Usuario.Nome.ToLowerInvariant().Contains(term))
             {
-                profiles.Add(new ProfileDto(partner.Id, partner.Usuario.Nome, PerfilUsuarioEnum.Parceiro, partner.TotalPontos));
+                profiles.Add(new ProfileDto(partner.Id, partner.Usuario.Nome, partner.Usuario.Email, PerfilUsuarioEnum.Parceiro, partner.TotalPontos));
             }
         }
 
