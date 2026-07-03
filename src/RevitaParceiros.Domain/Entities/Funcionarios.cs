@@ -18,5 +18,7 @@ public partial class Funcionarios
 
     public DateTime? AtualizadoEm { get; set; }
 
+    public virtual ICollection<ComprasFuncionarios> ComprasFuncionarios { get; set; } = new List<ComprasFuncionarios>();
+
     public virtual Usuarios Usuario { get; set; }
 }
