@@ -36,6 +36,8 @@ public partial class Usuarios
 
     public virtual ICollection<Compras> Compras { get; set; } = new List<Compras>();
 
+    public virtual ICollection<ComprasFuncionarios> ComprasFuncionarios { get; set; } = new List<ComprasFuncionarios>();
+
     public virtual Funcionarios Funcionarios { get; set; }
 
     public virtual Parceiros Parceiros { get; set; }

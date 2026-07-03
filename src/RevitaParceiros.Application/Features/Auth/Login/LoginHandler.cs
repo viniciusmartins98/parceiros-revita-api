@@ -31,7 +31,11 @@ public sealed class LoginHandler(
         }
 
 
-        var accessToken = jwtTokenService.GenerateAccessToken(usuario.Id, usuario.Nome, usuario.Perfil.ToString());
+        var employeeId = usuario?.Funcionarios?.Id;
+        var partnerId = usuario?.Parceiros?.Id;
+        var clientId = usuario?.Clientes?.Id;
+
+        var accessToken = jwtTokenService.GenerateAccessToken(usuario.Id, usuario.Nome, usuario.Perfil.ToString(), employeeId, partnerId, clientId);
         var refreshTokenString = jwtTokenService.GenerateRefreshToken();
         var expiresAt = dateTimeProvider.UtcNow.AddDays(7); // Vai ser sobreposto na infra baseado no appsettings
 
@@ -54,8 +58,9 @@ public sealed class LoginHandler(
             ExpiresAt: expiresAt,
             User: new UserInfo(
                 usuario.Id,
-                usuario?.Parceiros?.Id,
-                usuario?.Clientes?.Id,
+                employeeId,
+                partnerId,
+                clientId,
                 usuario.Nome,
                 usuario.Perfil.ToString())
             );

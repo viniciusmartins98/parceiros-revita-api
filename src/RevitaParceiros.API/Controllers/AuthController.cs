@@ -74,7 +74,7 @@ public class AuthController(IServiceProvider serviceProvider) : ControllerBase<A
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> GetAuthenticatedClient()
     {
-        var result = await Mediator.Send(new GetClientByUserIdRequest(UserId!.Value));
+        var result = await Mediator.Send(new GetClientByUserIdRequest(UserContext!.UserId));
         return Ok(result);
     }
 
@@ -85,7 +85,7 @@ public class AuthController(IServiceProvider serviceProvider) : ControllerBase<A
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> GetAuthenticatedPartner()
     {
-        var result = await Mediator.Send(new GetPartnerByUserIdRequest(UserId!.Value));
+        var result = await Mediator.Send(new GetPartnerByUserIdRequest(UserContext!.UserId));
         return Ok(result);
     }
 }

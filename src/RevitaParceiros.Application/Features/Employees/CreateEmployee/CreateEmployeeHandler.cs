@@ -23,34 +23,35 @@ public sealed class CreateEmployeeHandler(
         var initialPassword = "Revita@" + request.Name.Split(' ').FirstOrDefault()?.Replace(" ", "");
         var passwordHash = passwordHasher.Hash(initialPassword);
 
-        var usuario = new Usuarios
+        var funcionario = new Funcionarios
         {
             Id = Guid.NewGuid(),
-            Nome = request.Name,
-            Email = request.Email,
-            Telefone = request.Phone,
-            SenhaHash = passwordHash,
-            Ativo = request.IsActive,
             CriadoEm = dateTimeProvider.UtcNow,
-            Perfil = PerfilUsuarioEnum.Funcionario,
-            Funcionarios = new Funcionarios
+            Usuario = new Usuarios
             {
                 Id = Guid.NewGuid(),
-                CriadoEm = dateTimeProvider.UtcNow
+                Nome = request.Name,
+                Email = request.Email,
+                Telefone = request.Phone,
+                SenhaHash = passwordHash,
+                Ativo = request.IsActive,
+                CriadoEm = dateTimeProvider.UtcNow,
+                Perfil = PerfilUsuarioEnum.Funcionario
             }
         };
 
         // Link the relationship
-        usuario.Funcionarios.UsuarioId = usuario.Id;
+        funcionario.UsuarioId = funcionario.Usuario.Id;
 
-        await funcionarioRepository.AddAsync(usuario, cancellationToken);
+        await funcionarioRepository.AddAsync(funcionario, cancellationToken);
 
         return new EmployeeDto(
-            usuario.Id,
-            usuario.Nome,
-            usuario.Telefone,
-            usuario.Email,
-            usuario.Ativo,
-            usuario.CriadoEm);
+            funcionario.Id,
+            funcionario.UsuarioId,
+            funcionario.Usuario.Nome,
+            funcionario.Usuario.Telefone,
+            funcionario.Usuario.Email,
+            funcionario.Usuario.Ativo,
+            funcionario.Usuario.CriadoEm);
     }
 }

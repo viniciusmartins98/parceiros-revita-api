@@ -27,6 +27,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "public.compras_funcionarios",
+         "ObjectType": 0
+      },
+      {
          "ExcludedColumns": [
             "tipo_transacao"
          ],

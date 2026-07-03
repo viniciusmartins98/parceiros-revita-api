@@ -12,6 +12,7 @@ public sealed class UsuarioRepository(DatabaseContext context) : IUsuarioReposit
         return context.Usuarios
             .Include(u => u.Clientes)
             .Include(u => u.Parceiros)
+            .Include(u => u.Funcionarios)
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Email == email, ct);
     }

@@ -6,9 +6,9 @@ namespace RevitaParceiros.Application.Common.Interfaces;
 public interface IJwtTokenService
 {
     /// <summary>
-    /// Gera um token de acesso JWT.
+    /// Gera um token de acesso JWT com claims específicos de perfis.
     /// </summary>
-    string GenerateAccessToken(Guid userId, string name, string role);
+    string GenerateAccessToken(Guid userId, string name, string role, Guid? employeeId = null, Guid? partnerId = null, Guid? clientId = null);
 
     /// <summary>
     /// Gera um token de atualização (refresh token) criptograficamente seguro.

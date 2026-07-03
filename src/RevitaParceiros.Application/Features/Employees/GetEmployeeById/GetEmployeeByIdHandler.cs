@@ -9,19 +9,20 @@ public sealed class GetEmployeeByIdHandler(IFuncionarioRepository funcionarioRep
 {
     public async ValueTask<EmployeeDto> Handle(GetEmployeeByIdRequest request, CancellationToken cancellationToken)
     {
-        var usuario = await funcionarioRepository.GetByIdAsync(request.Id, cancellationToken);
+        var funcionario = await funcionarioRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if (usuario is null)
+        if (funcionario is null)
         {
             throw new NotFoundException("Funcionário não encontrado.");
         }
 
         return new EmployeeDto(
-            usuario.Id,
-            usuario.Nome,
-            usuario.Telefone,
-            usuario.Email,
-            usuario.Ativo,
-            usuario.CriadoEm);
+            funcionario.Id,
+            funcionario.UsuarioId,
+            funcionario.Usuario.Nome,
+            funcionario.Usuario.Telefone,
+            funcionario.Usuario.Email,
+            funcionario.Usuario.Ativo,
+            funcionario.Usuario.CriadoEm);
     }
 }

@@ -18,6 +18,8 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<Compras> Compras { get; set; }
 
+    public virtual DbSet<ComprasFuncionarios> ComprasFuncionarios { get; set; }
+
     public virtual DbSet<ExtratoPontos> ExtratoPontos { get; set; }
 
     public virtual DbSet<Funcionarios> Funcionarios { get; set; }
@@ -121,6 +123,52 @@ public partial class DatabaseContext : DbContext
                 .HasForeignKey(d => d.RegistradoPor)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_compras_registrado_por");
+        });
+
+        modelBuilder.Entity<ComprasFuncionarios>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("compras_funcionarios_pkey");
+
+            entity.ToTable("compras_funcionarios", tb => tb.HasComment("Registro de compras internas realizadas por funcionários (apenas para controle, sem gerar pontos)."));
+
+            entity.HasIndex(e => e.DataCompra, "ix_compras_func_data").IsDescending();
+
+            entity.HasIndex(e => e.FuncionarioId, "ix_compras_func_funcionario");
+
+            entity.HasIndex(e => e.RegistradoPor, "ix_compras_func_registrado");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("id");
+            entity.Property(e => e.AtualizadoEm).HasColumnName("atualizado_em");
+            entity.Property(e => e.CriadoEm)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("criado_em");
+            entity.Property(e => e.DataCompra)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("data_compra");
+            entity.Property(e => e.Descricao)
+                .HasMaxLength(500)
+                .HasComment("Descrição opcional dos itens comprados.")
+                .HasColumnName("descricao");
+            entity.Property(e => e.FuncionarioId).HasColumnName("funcionario_id");
+            entity.Property(e => e.RegistradoPor)
+                .HasComment("Usuário (Admin ou Funcionario) que registrou a compra.")
+                .HasColumnName("registrado_por");
+            entity.Property(e => e.Valor)
+                .HasPrecision(12, 2)
+                .HasComment("Valor total da compra.")
+                .HasColumnName("valor");
+
+            entity.HasOne(d => d.Funcionario).WithMany(p => p.ComprasFuncionarios)
+                .HasForeignKey(d => d.FuncionarioId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_compras_func_funcionario");
+
+            entity.HasOne(d => d.RegistradoPorNavigation).WithMany(p => p.ComprasFuncionarios)
+                .HasForeignKey(d => d.RegistradoPor)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_compras_func_registrado_por");
         });
 
         modelBuilder.Entity<ExtratoPontos>(entity =>

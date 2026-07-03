@@ -8,14 +8,15 @@ public sealed class ListEmployeesHandler(IFuncionarioRepository funcionarioRepos
 {
     public async ValueTask<IReadOnlyCollection<EmployeeDto>> Handle(ListEmployeesRequest request, CancellationToken cancellationToken)
     {
-        var usuarios = await funcionarioRepository.GetAllAsync(cancellationToken);
+        var funcionarios = await funcionarioRepository.GetAllAsync(cancellationToken);
 
-        return usuarios.Select(u => new EmployeeDto(
-            u.Id,
-            u.Nome,
-            u.Telefone,
-            u.Email,
-            u.Ativo,
-            u.CriadoEm)).ToList();
+        return funcionarios.Select(f => new EmployeeDto(
+            f.Id,
+            f.UsuarioId,
+            f.Usuario.Nome,
+            f.Usuario.Telefone,
+            f.Usuario.Email,
+            f.Usuario.Ativo,
+            f.Usuario.CriadoEm)).ToList();
     }
 }
