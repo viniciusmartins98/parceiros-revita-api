@@ -12,9 +12,9 @@ public sealed class UpdateEmployeeHandler(
 {
     public async ValueTask<EmployeeDto> Handle(UpdateEmployeeRequest request, CancellationToken cancellationToken)
     {
-        var usuario = await funcionarioRepository.GetByIdAsync(request.Id, cancellationToken);
+        var funcionario = await funcionarioRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if (usuario is null)
+        if (funcionario is null)
         {
             throw new NotFoundException("Funcionário não encontrado.");
         }
@@ -24,25 +24,22 @@ public sealed class UpdateEmployeeHandler(
             throw new BusinessRuleException("Já existe outro usuário cadastrado com este e-mail.");
         }
 
-        usuario.Nome = request.Name;
-        usuario.Email = request.Email;
-        usuario.Telefone = request.Phone;
-        usuario.Ativo = request.IsActive;
-        usuario.AtualizadoEm = dateTimeProvider.UtcNow;
+        funcionario.Usuario.Nome = request.Name;
+        funcionario.Usuario.Email = request.Email;
+        funcionario.Usuario.Telefone = request.Phone;
+        funcionario.Usuario.Ativo = request.IsActive;
+        funcionario.Usuario.AtualizadoEm = dateTimeProvider.UtcNow;
+        funcionario.AtualizadoEm = dateTimeProvider.UtcNow;
 
-        if (usuario.Funcionarios != null)
-        {
-            usuario.Funcionarios.AtualizadoEm = dateTimeProvider.UtcNow;
-        }
-
-        await funcionarioRepository.UpdateAsync(usuario, cancellationToken);
+        await funcionarioRepository.UpdateAsync(funcionario, cancellationToken);
 
         return new EmployeeDto(
-            usuario.Id,
-            usuario.Nome,
-            usuario.Telefone,
-            usuario.Email,
-            usuario.Ativo,
-            usuario.CriadoEm);
+            funcionario.Id,
+            funcionario.UsuarioId,
+            funcionario.Usuario.Nome,
+            funcionario.Usuario.Telefone,
+            funcionario.Usuario.Email,
+            funcionario.Usuario.Ativo,
+            funcionario.Usuario.CriadoEm);
     }
 }

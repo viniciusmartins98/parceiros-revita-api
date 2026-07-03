@@ -1,6 +1,7 @@
-﻿using Mediator;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RevitaParceiros.API.AuthContext;
 using System.Security.Claims;
 
 namespace RevitaParceiros.API.Controllers
@@ -17,8 +18,16 @@ namespace RevitaParceiros.API.Controllers
 
         private IMediator _mediator;
         protected IMediator Mediator => _mediator ??= _serviceProvider.GetRequiredService<IMediator>();
-
+        protected UserContext? UserContext => _userId != null ? new UserContext
+        {
+            UserId = new Guid(_userId),
+            ClientId = _clientId != null ? new Guid(_clientId) : null,
+            EmployeeId = _employeeId != null ? new Guid(_employeeId) : null,
+            PartnerId = _partnerId != null ? new Guid(_partnerId) : null,
+        } : null;
         private string? _userId => User.FindFirstValue(ClaimTypes.NameIdentifier);
-        protected Guid? UserId => _userId != null ? new Guid(_userId) : null;
+        private string? _employeeId => User.FindFirstValue("EmployeeId");
+        private string? _partnerId => User.FindFirstValue("PartnerId");
+        private string? _clientId => User.FindFirstValue("ClientId");
     }
 }

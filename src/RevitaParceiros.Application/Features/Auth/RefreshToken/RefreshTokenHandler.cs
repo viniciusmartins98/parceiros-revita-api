@@ -87,6 +87,7 @@ public sealed class RefreshTokenHandler(
             ExpiresAt: expiresAt,
             User: new UserInfo(
                 usuario.Id,
+                usuario.Funcionarios?.Id,
                 usuario.Parceiros?.Id,
                 usuario.Clientes?.Id,
                 usuario.Nome,

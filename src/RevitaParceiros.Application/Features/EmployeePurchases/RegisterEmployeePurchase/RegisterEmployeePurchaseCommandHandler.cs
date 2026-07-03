@@ -14,7 +14,7 @@ public sealed class RegisterEmployeePurchaseCommandHandler(
     {
         var funcionario = await funcionarioRepository.GetByIdAsync(request.EmployeeId, cancellationToken);
 
-        if (funcionario == null || funcionario.Funcionarios == null)
+        if (funcionario == null)
         {
             throw new NotFoundException("Funcionário não encontrado.");
         }
@@ -22,7 +22,7 @@ public sealed class RegisterEmployeePurchaseCommandHandler(
         var novaCompra = new ComprasFuncionarios
         {
             Id = Guid.NewGuid(),
-            FuncionarioId = funcionario.Funcionarios.Id,
+            FuncionarioId = funcionario.Id,
             RegistradoPor = request.RegisteredByUserId,
             Valor = request.Amount,
             Descricao = request.Description,

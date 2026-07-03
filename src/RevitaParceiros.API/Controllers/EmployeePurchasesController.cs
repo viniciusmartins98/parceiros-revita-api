@@ -20,7 +20,7 @@ public class EmployeePurchasesController(IServiceProvider provider) : Controller
             request.Description,
             request.PurchaseDate,
             request.EmployeeId,
-            UserId!.Value
+            UserContext!.UserId
         );
 
         var result = await Mediator.Send(command, cancellationToken);
@@ -39,7 +39,11 @@ public class EmployeePurchasesController(IServiceProvider provider) : Controller
     [Authorize(Roles = "Funcionario")]
     public async Task<IActionResult> GetMyPurchases(CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new ListEmployeePurchasesRequest(UserId!.Value), cancellationToken);
+        if (UserContext!.EmployeeId == null)
+        {
+            return Forbid();
+        }
+        var result = await Mediator.Send(new ListEmployeePurchasesRequest(UserContext.EmployeeId.Value), cancellationToken);
         return Ok(result);
     }
 

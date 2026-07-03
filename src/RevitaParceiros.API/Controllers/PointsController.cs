@@ -22,8 +22,8 @@ public class PointsController(IServiceProvider provider) : ControllerBase<Points
     public async Task<IActionResult> RedeemPoints([FromBody] RedeemPointsRequestDto request, CancellationToken cancellationToken)
     {
         IRequest<RedeemPointsResponseDto> command = request.ProfileType == Domain.Enums.PerfilUsuarioEnum.Cliente
-            ? new RedeemClientPointsCommand(request.ProfileId, request.Points, UserId!.Value)
-            : new RedeemPartnerPointsCommand(request.ProfileId, request.Points, UserId!.Value);
+            ? new RedeemClientPointsCommand(request.ProfileId, request.Points, UserContext!.UserId)
+            : new RedeemPartnerPointsCommand(request.ProfileId, request.Points, UserContext!.UserId);
 
         var result = await Mediator.Send(command, cancellationToken);
         return Ok(result);

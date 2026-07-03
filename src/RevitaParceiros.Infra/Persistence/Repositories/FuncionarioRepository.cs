@@ -7,49 +7,58 @@ namespace RevitaParceiros.Infra.Persistence.Repositories;
 
 public sealed class FuncionarioRepository(DatabaseContext context) : IFuncionarioRepository
 {
-    public async Task<IReadOnlyCollection<Usuarios>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<Funcionarios>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await context.Usuarios
-            .Include(u => u.Funcionarios)
-            .Where(u => u.Funcionarios != null)
+        return await context.Funcionarios
+            .Include(f => f.Usuario)
             .AsNoTracking()
-            .OrderByDescending(u => u.CriadoEm)
+            .OrderByDescending(f => f.CriadoEm)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Usuarios?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Funcionarios?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Usuarios
-            .Include(u => u.Funcionarios)
-            .Include(u => u.TokensAtualizacao)
-            .FirstOrDefaultAsync(u => u.Id == id && u.Funcionarios != null, cancellationToken);
+        return await context.Funcionarios
+            .Include(f => f.Usuario)
+            .ThenInclude(u => u.TokensAtualizacao)
+            .FirstOrDefaultAsync(f => f.Id == id, cancellationToken);
     }
 
-    public async Task AddAsync(Usuarios usuario, CancellationToken cancellationToken = default)
+    public async Task<Funcionarios?> GetByUserIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        await context.Usuarios.AddAsync(usuario, cancellationToken);
+        return await context.Funcionarios
+            .Include(f => f.Usuario)
+            .ThenInclude(u => u.TokensAtualizacao)
+            .FirstOrDefaultAsync(f => f.Usuario.Id == id, cancellationToken);
+    }
+
+    public async Task AddAsync(Funcionarios funcionario, CancellationToken cancellationToken = default)
+    {
+        await context.Funcionarios.AddAsync(funcionario, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task UpdateAsync(Usuarios usuario, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(Funcionarios funcionario, CancellationToken cancellationToken = default)
     {
-        if (context.Entry(usuario).State == EntityState.Detached)
+        if (context.Entry(funcionario).State == EntityState.Detached)
         {
-            context.Usuarios.Update(usuario);
+            context.Funcionarios.Update(funcionario);
         }
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task DeleteAsync(Usuarios usuario, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(Funcionarios funcionario, CancellationToken cancellationToken = default)
     {
-        context.Funcionarios.Remove(usuario.Funcionarios);
-
-        if (usuario.TokensAtualizacao != null && usuario.TokensAtualizacao.Any())
+        if (funcionario.Usuario != null)
         {
-            context.TokensAtualizacao.RemoveRange(usuario.TokensAtualizacao);
+            if (funcionario.Usuario.TokensAtualizacao != null && funcionario.Usuario.TokensAtualizacao.Any())
+            {
+                context.TokensAtualizacao.RemoveRange(funcionario.Usuario.TokensAtualizacao);
+            }
+            context.Usuarios.Remove(funcionario.Usuario);
         }
 
-        context.Usuarios.Remove(usuario);
+        context.Funcionarios.Remove(funcionario);
 
         try
         {
@@ -63,11 +72,11 @@ public sealed class FuncionarioRepository(DatabaseContext context) : IFuncionari
 
     public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await context.Usuarios.AnyAsync(u => u.Email == email, cancellationToken);
+        return await context.Funcionarios.AnyAsync(f => f.Usuario.Email == email, cancellationToken);
     }
 
     public async Task<bool> ExistsByEmailExceptIdAsync(string email, Guid id, CancellationToken cancellationToken = default)
     {
-        return await context.Usuarios.AnyAsync(u => u.Email == email && u.Id != id, cancellationToken);
+        return await context.Funcionarios.AnyAsync(f => f.Usuario.Email == email && f.Id != id, cancellationToken);
     }
 }

@@ -21,7 +21,7 @@ public class SalesController(IServiceProvider provider) : ControllerBase<SalesCo
             request.Amount,
             request.PartnerId,
             request.ClientId,
-            UserId!.Value
+            UserContext!.UserId
         );
 
         var result = await Mediator.Send(command, cancellationToken);

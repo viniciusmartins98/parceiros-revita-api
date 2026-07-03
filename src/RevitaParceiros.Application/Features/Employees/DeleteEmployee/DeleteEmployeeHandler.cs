@@ -9,14 +9,14 @@ public sealed class DeleteEmployeeHandler(IFuncionarioRepository funcionarioRepo
 {
     public async ValueTask<Unit> Handle(DeleteEmployeeRequest request, CancellationToken cancellationToken)
     {
-        var usuario = await funcionarioRepository.GetByIdAsync(request.Id, cancellationToken);
+        var funcionario = await funcionarioRepository.GetByIdAsync(request.Id, cancellationToken);
 
-        if (usuario is null)
+        if (funcionario is null)
         {
             throw new NotFoundException("Funcionário não encontrado.");
         }
 
-        await funcionarioRepository.DeleteAsync(usuario, cancellationToken);
+        await funcionarioRepository.DeleteAsync(funcionario, cancellationToken);
 
         return Unit.Value;
     }

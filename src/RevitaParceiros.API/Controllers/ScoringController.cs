@@ -26,7 +26,7 @@ public class ScoringController(IServiceProvider provider) : ControllerBase<Scori
             request.PointsGenerated,
             request.PointsForRedemption,
             request.RedemptionValue,
-            UserId!.Value
+            UserContext!.UserId
         );
 
         var result = await Mediator.Send(command, cancellationToken);
@@ -49,7 +49,7 @@ public class ScoringController(IServiceProvider provider) : ControllerBase<Scori
             request.PointsGenerated,
             request.PointsForRedemption,
             request.RedemptionValue,
-            UserId!.Value
+            UserContext!.UserId
         );
 
         var result = await Mediator.Send(command, cancellationToken);

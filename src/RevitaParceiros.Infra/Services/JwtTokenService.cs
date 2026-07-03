@@ -10,7 +10,7 @@ namespace RevitaParceiros.Infra.Services;
 
 public sealed class JwtTokenService(IConfiguration configuration) : IJwtTokenService
 {
-    public string GenerateAccessToken(Guid userId, string name, string role)
+    public string GenerateAccessToken(Guid userId, string name, string role, Guid? employeeId = null, Guid? partnerId = null, Guid? clientId = null)
     {
         var jwtSection = configuration.GetSection("Jwt");
         var secretKey = jwtSection["SecretKey"]
@@ -23,13 +23,17 @@ public sealed class JwtTokenService(IConfiguration configuration) : IJwtTokenSer
             expirationMinutes = 15; // default fallback
         }
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(ClaimTypes.Name, name),
             new Claim(ClaimTypes.Role, role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
+
+        if (employeeId.HasValue) claims.Add(new Claim("EmployeeId", employeeId.Value.ToString()));
+        if (partnerId.HasValue) claims.Add(new Claim("PartnerId", partnerId.Value.ToString()));
+        if (clientId.HasValue) claims.Add(new Claim("ClientId", clientId.Value.ToString()));
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
