@@ -3,4 +3,4 @@ using Mediator;
 
 namespace RevitaParceiros.Application.Features.EmployeePurchases.ListAllEmployeePurchases;
 
-public sealed record ListAllEmployeePurchasesRequest() : IRequest<List<EmployeePurchaseDto>>;
+public sealed record ListAllEmployeePurchasesRequest(string Period = "week") : IRequest<List<EmployeePurchaseDto>>;
