@@ -9,7 +9,15 @@ public sealed class ListEmployeePurchasesHandler(ICompraFuncionarioRepository co
 {
     public async ValueTask<List<EmployeePurchaseDto>> Handle(ListEmployeePurchasesRequest request, CancellationToken cancellationToken)
     {
-        var compras = await compraFuncionarioRepository.GetByFuncionarioIdAsync(request.FuncionarioId, cancellationToken);
+        DateTime? startDate = request.Period.ToLower() switch
+        {
+            "week" => DateTime.UtcNow.AddDays(-7),
+            "month" => DateTime.UtcNow.AddMonths(-1),
+            "year" => DateTime.UtcNow.AddYears(-1),
+            _ => null
+        };
+
+        var compras = await compraFuncionarioRepository.GetByFuncionarioIdAsync(request.FuncionarioId, startDate, cancellationToken);
 
         return compras.Select(c => new EmployeePurchaseDto(
             c.Id,

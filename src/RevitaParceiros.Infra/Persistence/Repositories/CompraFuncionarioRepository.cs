@@ -6,25 +6,39 @@ namespace RevitaParceiros.Infra.Persistence.Repositories;
 
 public sealed class CompraFuncionarioRepository(DatabaseContext context) : ICompraFuncionarioRepository
 {
-    public async Task<IReadOnlyCollection<ComprasFuncionarios>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<ComprasFuncionarios>> GetAllAsync(DateTime? startDate = null, CancellationToken cancellationToken = default)
     {
-        return await context.ComprasFuncionarios
+        var query = context.ComprasFuncionarios
             .Include(c => c.Funcionario)
                 .ThenInclude(f => f.Usuario)
             .Include(c => c.RegistradoPorNavigation)
-            .AsNoTracking()
+            .AsNoTracking();
+            
+        if (startDate.HasValue)
+        {
+            query = query.Where(c => c.DataCompra >= startDate.Value);
+        }
+
+        return await query
             .OrderByDescending(c => c.DataCompra)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyCollection<ComprasFuncionarios>> GetByFuncionarioIdAsync(Guid funcionarioId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<ComprasFuncionarios>> GetByFuncionarioIdAsync(Guid funcionarioId, DateTime? startDate = null, CancellationToken cancellationToken = default)
     {
-        return await context.ComprasFuncionarios
+        var query = context.ComprasFuncionarios
             .Include(c => c.Funcionario)
                 .ThenInclude(f => f.Usuario)
             .Include(c => c.RegistradoPorNavigation)
             .Where(c => c.FuncionarioId == funcionarioId)
-            .AsNoTracking()
+            .AsNoTracking();
+            
+        if (startDate.HasValue)
+        {
+            query = query.Where(c => c.DataCompra >= startDate.Value);
+        }
+
+        return await query
             .OrderByDescending(c => c.DataCompra)
             .ToListAsync(cancellationToken);
     }

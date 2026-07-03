@@ -29,29 +29,29 @@ public class EmployeePurchasesController(IServiceProvider provider) : Controller
 
     [HttpGet]
     [Authorize(Roles = "Administrador")]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll([FromQuery] string period = "week", CancellationToken cancellationToken = default)
     {
-        var result = await Mediator.Send(new ListAllEmployeePurchasesRequest(), cancellationToken);
+        var result = await Mediator.Send(new ListAllEmployeePurchasesRequest(period), cancellationToken);
         return Ok(result);
     }
 
     [HttpGet("my")]
     [Authorize(Roles = "Funcionario")]
-    public async Task<IActionResult> GetMyPurchases(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetMyPurchases([FromQuery] string period = "week", CancellationToken cancellationToken = default)
     {
         if (UserContext!.EmployeeId == null)
         {
             return Forbid();
         }
-        var result = await Mediator.Send(new ListEmployeePurchasesRequest(UserContext.EmployeeId.Value), cancellationToken);
+        var result = await Mediator.Send(new ListEmployeePurchasesRequest(UserContext.EmployeeId.Value, period), cancellationToken);
         return Ok(result);
     }
 
     [HttpGet("employee/{id:guid}")]
     [Authorize(Roles = "Administrador")]
-    public async Task<IActionResult> GetByEmployee(Guid employeeId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByEmployee(Guid employeeId, [FromQuery] string period = "week", CancellationToken cancellationToken = default)
     {
-        var result = await Mediator.Send(new ListEmployeePurchasesRequest(employeeId), cancellationToken);
+        var result = await Mediator.Send(new ListEmployeePurchasesRequest(employeeId, period), cancellationToken);
         return Ok(result);
     }
 }
