@@ -8,4 +8,5 @@ public record UpdatePartnerRequest(
     string Name,
     string Phone,
     string Email,
+    string Cpf,
     bool IsActive) : IRequest<PartnerDto>;

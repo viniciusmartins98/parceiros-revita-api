@@ -35,6 +35,7 @@ public sealed class UpdateClientHandler(
             cliente.Usuario.Nome,
             cliente.Usuario.Telefone,
             cliente.Usuario.Email,
+            cliente.Cpf,
             cliente.TotalPontos,
             cliente.Usuario.Ativo,
             cliente.Usuario.CriadoEm);

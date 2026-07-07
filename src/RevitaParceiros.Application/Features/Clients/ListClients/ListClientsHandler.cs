@@ -16,6 +16,7 @@ public sealed class ListClientsHandler(IClienteRepository clienteRepository)
             c.Usuario.Nome,
             c.Usuario.Telefone,
             c.Usuario.Email,
+            c.Cpf,
             c.TotalPontos,
             c.Usuario.Ativo,
             c.Usuario.CriadoEm)).ToList();

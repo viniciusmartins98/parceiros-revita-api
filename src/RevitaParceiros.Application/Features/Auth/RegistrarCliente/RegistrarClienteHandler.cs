@@ -9,6 +9,7 @@ namespace RevitaParceiros.Application.Features.Auth.RegistrarCliente;
 
 public sealed class RegistrarClienteHandler(
     IUsuarioRepository usuarioRepository,
+    IClienteRepository clienteRepository,
     IPasswordHasher passwordHasher,
     IDateTimeProvider dateTimeProvider) : IRequestHandler<RegistrarClienteRequest, RegistrarClienteResponse>
 {
@@ -19,6 +20,8 @@ public sealed class RegistrarClienteHandler(
         var usuarioExistente = await usuarioRepository.GetByEmailAsync(request.Email, cancellationToken);
         if (usuarioExistente is not null)
             throw new BusinessRuleException("Já existe um usuário cadastrado com este e-mail.");
+        if (await clienteRepository.ExistsByCpfAsync(request.Cpf, cancellationToken))
+            throw new BusinessRuleException("Já existe um cliente cadastrado com este cpf.");
 
         var senhaHash = passwordHasher.Hash(request.Senha);
 

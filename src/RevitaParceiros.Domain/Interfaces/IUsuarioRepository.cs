@@ -7,8 +7,8 @@ namespace RevitaParceiros.Domain.Interfaces;
 /// </summary>
 public interface IUsuarioRepository
 {
-    Task<Usuarios?> GetByEmailAsync(string email, CancellationToken ct = default);
     Task<Usuarios?> GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task<Usuarios?> GetByEmailAsync(string email, CancellationToken ct = default);
     Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default);
     Task<List<Usuarios>> GetAllAsync(CancellationToken ct = default);
     Task AddAsync(Usuarios usuario, CancellationToken ct = default);

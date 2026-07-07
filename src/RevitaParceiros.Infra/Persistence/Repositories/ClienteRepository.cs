@@ -79,6 +79,12 @@ public sealed class ClienteRepository(DatabaseContext context) : IClienteReposit
         return await context.Clientes.AnyAsync(c => c.Usuario.Email == email, cancellationToken);
     }
 
+    public async Task<bool> ExistsByCpfAsync(string cpf, CancellationToken cancellationToken = default)
+    {
+        return await context.Clientes.AnyAsync(c => c.Cpf == cpf, cancellationToken);
+    }
+
+
     public async Task<bool> ExistsByEmailExceptIdAsync(string email, Guid id, CancellationToken cancellationToken = default)
     {
         return await context.Clientes.AnyAsync(c => c.Usuario.Email == email && c.Id != id, cancellationToken);

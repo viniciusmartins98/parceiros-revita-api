@@ -6,4 +6,5 @@ public record CreatePartnerRequest(
     string Name,
     string Phone,
     string Email,
+    string Cpf,
     bool IsActive) : IRequest<PartnerDto>;

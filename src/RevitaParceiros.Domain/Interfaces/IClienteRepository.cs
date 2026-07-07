@@ -11,5 +11,6 @@ public interface IClienteRepository
     Task UpdateAsync(Clientes cliente, CancellationToken cancellationToken = default);
     Task DeleteAsync(Clientes cliente, CancellationToken cancellationToken = default);
     Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
+    Task<bool> ExistsByCpfAsync(string cpf, CancellationToken cancellationToken = default);
     Task<bool> ExistsByEmailExceptIdAsync(string email, Guid id, CancellationToken cancellationToken = default);
 }

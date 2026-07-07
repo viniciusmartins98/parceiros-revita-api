@@ -77,8 +77,18 @@ public sealed class ParceiroRepository(DatabaseContext context) : IParceiroRepos
         return await context.Parceiros.AnyAsync(p => p.Usuario.Email == email, cancellationToken);
     }
 
+    public async Task<bool> ExistsByCpfAsync(string email, CancellationToken cancellationToken = default)
+    {
+        return await context.Parceiros.AnyAsync(p => p.Cpf == email, cancellationToken);
+    }
+
     public async Task<bool> ExistsByEmailExceptIdAsync(string email, Guid id, CancellationToken cancellationToken = default)
     {
         return await context.Parceiros.AnyAsync(p => p.Usuario.Email == email && p.Id != id, cancellationToken);
+    }
+
+    public async Task<bool> ExistsByCpfExceptIdAsync(string cpf, Guid id, CancellationToken cancellationToken = default)
+    {
+        return await context.Parceiros.AnyAsync(p => p.Cpf == cpf && p.Id != id, cancellationToken);
     }
 }

@@ -16,9 +16,9 @@ public sealed class UpdatePartnerHandler(
             ?? throw new NotFoundException("Parceiro não encontrado.");
 
         if (await parceiroRepository.ExistsByEmailExceptIdAsync(request.Email, request.Id, cancellationToken))
-        {
             throw new BusinessRuleException("Já existe outro usuário cadastrado com este e-mail.");
-        }
+        if (await parceiroRepository.ExistsByCpfExceptIdAsync(request.Cpf, request.Id, cancellationToken))
+            throw new BusinessRuleException("Já existe outro parceiro cadastrado com este cpf.");
 
         parceiro.Usuario.Nome = request.Name;
         parceiro.Usuario.Email = request.Email;
@@ -35,6 +35,7 @@ public sealed class UpdatePartnerHandler(
             parceiro.Usuario.Nome,
             parceiro.Usuario.Telefone,
             parceiro.Usuario.Email,
+            parceiro.Cpf,
             parceiro.TotalPontos,
             parceiro.Usuario.Ativo,
             parceiro.Usuario.CriadoEm);

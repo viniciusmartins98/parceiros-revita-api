@@ -19,6 +19,10 @@ public sealed class CreateClientHandler(
         {
             throw new BusinessRuleException("Já existe um usuário cadastrado com este e-mail.");
         }
+        if (await clienteRepository.ExistsByCpfAsync(request.Cpf, cancellationToken))
+        {
+            throw new BusinessRuleException("Já existe um cliente cadastrado com este cpf.");
+        }
 
         var initialPassword = "Revita@" + request.Name.Split(' ').FirstOrDefault()?.Replace(" ", "");
         var passwordHash = passwordHasher.Hash(initialPassword);
@@ -52,6 +56,7 @@ public sealed class CreateClientHandler(
             cliente.Usuario.Nome,
             cliente.Usuario.Telefone,
             cliente.Usuario.Email,
+            cliente.Cpf,
             cliente.TotalPontos,
             cliente.Usuario.Ativo,
             cliente.Usuario.CriadoEm);

@@ -6,6 +6,7 @@ public record ClientDto(
     string Name,
     string Phone,
     string Email,
+    string Cpf,
     int Points,
     bool IsActive,
     DateTime CreatedAt);

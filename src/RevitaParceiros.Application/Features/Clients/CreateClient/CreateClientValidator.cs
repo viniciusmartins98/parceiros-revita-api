@@ -18,5 +18,9 @@ public class CreateClientValidator : AbstractValidator<CreateClientRequest>
         RuleFor(v => v.Phone)
             .NotEmpty().WithMessage("O telefone é obrigatório.")
             .MaximumLength(20).WithMessage("O telefone deve ter no máximo 20 caracteres.");
+
+        RuleFor(x => x.Cpf)
+            .NotEmpty().WithMessage("O CPF é obrigatório.")
+            .Length(11).WithMessage("O CPF deve ter 11 caracteres.");
     }
 }

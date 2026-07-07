@@ -16,6 +16,7 @@ public sealed class ListPartnersHandler(IParceiroRepository parceiroRepository)
             p.Usuario.Nome,
             p.Usuario.Telefone,
             p.Usuario.Email,
+            p.Cpf,
             p.TotalPontos,
             p.Usuario.Ativo,
             p.Usuario.CriadoEm)).ToList();

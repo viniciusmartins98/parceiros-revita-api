@@ -6,4 +6,5 @@ public record CreateClientRequest(
     string Name,
     string Phone,
     string Email,
+    string Cpf,
     bool IsActive) : IRequest<ClientDto>;

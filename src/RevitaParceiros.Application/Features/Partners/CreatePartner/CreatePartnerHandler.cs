@@ -19,6 +19,10 @@ public sealed class CreatePartnerHandler(
         {
             throw new BusinessRuleException("Já existe um usuário cadastrado com este e-mail.");
         }
+        if (await parceiroRepository.ExistsByEmailAsync(request.Cpf, cancellationToken))
+        {
+            throw new BusinessRuleException("Já existe um usuário cadastrado com este cpf.");
+        }
 
         var initialPassword = "Revita@" + request.Name.Split(' ').FirstOrDefault()?.Replace(" ", "");
         var passwordHash = passwordHasher.Hash(initialPassword);
@@ -52,6 +56,7 @@ public sealed class CreatePartnerHandler(
             parceiro.Usuario.Nome,
             parceiro.Usuario.Telefone,
             parceiro.Usuario.Email,
+            parceiro.Cpf,
             parceiro.TotalPontos,
             parceiro.Usuario.Ativo,
             parceiro.Usuario.CriadoEm);

@@ -11,5 +11,7 @@ public interface IParceiroRepository
     Task UpdateAsync(Parceiros parceiro, CancellationToken cancellationToken = default);
     Task DeleteAsync(Parceiros parceiro, CancellationToken cancellationToken = default);
     Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default);
+    Task<bool> ExistsByCpfAsync(string email, CancellationToken cancellationToken = default);
     Task<bool> ExistsByEmailExceptIdAsync(string email, Guid id, CancellationToken cancellationToken = default);
+    Task<bool> ExistsByCpfExceptIdAsync(string cpf, Guid id, CancellationToken cancellationToken = default);
 }

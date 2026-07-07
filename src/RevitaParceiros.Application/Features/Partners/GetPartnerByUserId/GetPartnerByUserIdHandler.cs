@@ -19,6 +19,7 @@ public sealed class GetPartnerByUserIdHandler(IParceiroRepository parceiroReposi
             parceiro.Usuario.Nome,
             parceiro.Usuario.Telefone,
             parceiro.Usuario.Email,
+            parceiro.Cpf,
             parceiro.TotalPontos,
             parceiro.Usuario.Ativo,
             parceiro.Usuario.CriadoEm);
