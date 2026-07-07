@@ -30,6 +30,7 @@ public sealed class CreatePartnerHandler(
         var parceiro = new Parceiros
         {
             Id = Guid.NewGuid(),
+            Cpf = request.Cpf,
             TotalPontos = 0,
             CriadoEm = dateTimeProvider.UtcNow,
             Usuario = new Usuarios

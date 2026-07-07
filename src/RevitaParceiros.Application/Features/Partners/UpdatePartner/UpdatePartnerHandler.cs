@@ -20,6 +20,7 @@ public sealed class UpdatePartnerHandler(
         if (await parceiroRepository.ExistsByCpfExceptIdAsync(request.Cpf, request.Id, cancellationToken))
             throw new BusinessRuleException("Já existe outro parceiro cadastrado com este cpf.");
 
+        parceiro.Cpf = request.Cpf;
         parceiro.Usuario.Nome = request.Name;
         parceiro.Usuario.Email = request.Email;
         parceiro.Usuario.Telefone = request.Phone;

@@ -20,6 +20,7 @@ public sealed class UpdateClientHandler(
             throw new BusinessRuleException("Já existe outro usuário cadastrado com este e-mail.");
         }
 
+        cliente.Cpf = request.Cpf;
         cliente.Usuario.Nome = request.Name;
         cliente.Usuario.Email = request.Email;
         cliente.Usuario.Telefone = request.Phone;
