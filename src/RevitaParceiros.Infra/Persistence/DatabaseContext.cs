@@ -449,6 +449,9 @@ public partial class DatabaseContext : DbContext
                 .HasDefaultValue(true)
                 .HasColumnName("ativo");
             entity.Property(e => e.AtualizadoEm).HasColumnName("atualizado_em");
+            entity.Property(e => e.Cpf)
+                .HasMaxLength(14)
+                .HasColumnName("cpf");
             entity.Property(e => e.CriadoEm)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("criado_em");

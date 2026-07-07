@@ -32,6 +32,8 @@ public partial class Usuarios
 
     public DateTime? AtualizadoEm { get; set; }
 
+    public string Cpf { get; set; }
+
     public virtual Clientes Clientes { get; set; }
 
     public virtual ICollection<Compras> Compras { get; set; } = new List<Compras>();

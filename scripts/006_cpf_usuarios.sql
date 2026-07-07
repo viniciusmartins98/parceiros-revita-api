@@ -1,0 +1,1 @@
+ALTER TABLE usuarios ADD cpf VARCHAR(14);
