@@ -46,12 +46,17 @@ public partial class DatabaseContext : DbContext
 
             entity.ToTable("clientes", tb => tb.HasComment("Dados complementares do Cliente (consumidor final)."));
 
+            entity.HasIndex(e => e.Cpf, "clientes_cpf_key").IsUnique();
+
             entity.HasIndex(e => e.UsuarioId, "uq_clientes_usuario").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
             entity.Property(e => e.AtualizadoEm).HasColumnName("atualizado_em");
+            entity.Property(e => e.Cpf)
+                .HasMaxLength(14)
+                .HasColumnName("cpf");
             entity.Property(e => e.CriadoEm)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("criado_em");
@@ -257,12 +262,17 @@ public partial class DatabaseContext : DbContext
 
             entity.ToTable("parceiros", tb => tb.HasComment("Dados complementares do Parceiro — saldo de pontos acumulado."));
 
+            entity.HasIndex(e => e.Cpf, "parceiros_cpf_key").IsUnique();
+
             entity.HasIndex(e => e.UsuarioId, "uq_parceiros_usuario").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("uuid_generate_v4()")
                 .HasColumnName("id");
             entity.Property(e => e.AtualizadoEm).HasColumnName("atualizado_em");
+            entity.Property(e => e.Cpf)
+                .HasMaxLength(14)
+                .HasColumnName("cpf");
             entity.Property(e => e.CriadoEm)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("criado_em");
@@ -449,9 +459,6 @@ public partial class DatabaseContext : DbContext
                 .HasDefaultValue(true)
                 .HasColumnName("ativo");
             entity.Property(e => e.AtualizadoEm).HasColumnName("atualizado_em");
-            entity.Property(e => e.Cpf)
-                .HasMaxLength(14)
-                .HasColumnName("cpf");
             entity.Property(e => e.CriadoEm)
                 .HasDefaultValueSql("now()")
                 .HasColumnName("criado_em");

@@ -23,6 +23,8 @@ public partial class Parceiros
 
     public DateTime? AtualizadoEm { get; set; }
 
+    public string Cpf { get; set; }
+
     public virtual ICollection<Compras> Compras { get; set; } = new List<Compras>();
 
     public virtual ICollection<ExtratoPontos> ExtratoPontos { get; set; } = new List<ExtratoPontos>();

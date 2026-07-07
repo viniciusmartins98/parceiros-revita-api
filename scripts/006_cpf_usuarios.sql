@@ -1,1 +1,2 @@
-ALTER TABLE usuarios ADD cpf VARCHAR(14);
+ALTER TABLE clientes ADD cpf VARCHAR(14);
+ALTER TABLE parceiros ADD cpf VARCHAR(14);

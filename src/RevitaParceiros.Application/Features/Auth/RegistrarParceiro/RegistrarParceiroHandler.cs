@@ -28,7 +28,6 @@ public sealed class RegistrarParceiroHandler(
             Nome = request.Nome,
             Email = request.Email,
             Telefone = request.Telefone,
-            Cpf = request.Cpf,
             SenhaHash = senhaHash,
             Ativo = true,
             CriadoEm = dateTimeProvider.UtcNow,
@@ -37,6 +36,7 @@ public sealed class RegistrarParceiroHandler(
             {
                 Id = Guid.NewGuid(),
                 TotalPontos = 0,
+                Cpf = request.Cpf,
                 CriadoEm = dateTimeProvider.UtcNow
             }
         };
