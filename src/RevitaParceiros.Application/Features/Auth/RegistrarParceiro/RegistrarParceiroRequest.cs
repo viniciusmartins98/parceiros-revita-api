@@ -6,6 +6,7 @@ public sealed record RegistrarParceiroRequest(
     string Nome,
     string Email,
     string Telefone,
+    string Cpf,
     string Senha) : IRequest<RegistrarParceiroResponse>;
 
 public sealed record RegistrarParceiroResponse();

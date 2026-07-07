@@ -18,6 +18,10 @@ public sealed class RegistrarClienteRequestValidator : AbstractValidator<Registr
             .NotEmpty().WithMessage("O telefone é obrigatório.")
             .MaximumLength(20).WithMessage("O telefone deve ter no máximo 20 caracteres.");
 
+        RuleFor(x => x.Cpf)
+            .NotEmpty().WithMessage("O CPF é obrigatório.")
+            .Length(11).WithMessage("O CPF deve ter 11 caracteres.");
+
         RuleFor(x => x.Senha)
             .NotEmpty().WithMessage("A senha é obrigatória.")
             .MinimumLength(6).WithMessage("A senha deve ter no mínimo 6 caracteres.");

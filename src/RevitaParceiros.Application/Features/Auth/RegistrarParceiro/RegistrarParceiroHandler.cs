@@ -28,6 +28,7 @@ public sealed class RegistrarParceiroHandler(
             Nome = request.Nome,
             Email = request.Email,
             Telefone = request.Telefone,
+            Cpf = request.Cpf,
             SenhaHash = senhaHash,
             Ativo = true,
             CriadoEm = dateTimeProvider.UtcNow,
