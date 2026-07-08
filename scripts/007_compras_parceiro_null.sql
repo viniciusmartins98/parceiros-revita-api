@@ -1,0 +1,2 @@
+ALTER TABLE compras 
+ALTER COLUMN parceiro_id DROP NOT NULL;

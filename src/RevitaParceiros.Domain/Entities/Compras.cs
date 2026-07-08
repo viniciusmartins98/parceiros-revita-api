@@ -14,7 +14,7 @@ public partial class Compras
 
     public Guid ClienteId { get; set; }
 
-    public Guid ParceiroId { get; set; }
+    public Guid? ParceiroId { get; set; }
 
     /// <summary>
     /// Funcionário ou Administrador que lançou a compra.

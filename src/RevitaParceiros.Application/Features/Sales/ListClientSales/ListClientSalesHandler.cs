@@ -13,7 +13,7 @@ public sealed class ListClientSalesHandler(ICompraRepository compraRepository) :
             c.Id,
             c.Valor,
             c.ParceiroId,
-            c.Parceiro.Usuario.Nome,
+            c.Parceiro?.Usuario?.Nome,
             c.ClienteId,
             c.Cliente.Usuario.Nome,
             c.DataCompra,

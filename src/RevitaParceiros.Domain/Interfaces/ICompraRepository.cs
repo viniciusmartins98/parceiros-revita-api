@@ -14,8 +14,8 @@ public interface ICompraRepository
     Task RegisterSaleAsync(
         Compras compra,
         IEnumerable<ExtratoPontos> extratoPontos,
-        Parceiros parceiro,
         Clientes cliente,
+        Parceiros? parceiro,
         CancellationToken cancellationToken = default);
 
     Task<(decimal TotalAmount, int TotalPoints)> GetPartnerAccumulatedAsync(Guid parceiroId, CancellationToken cancellationToken = default);

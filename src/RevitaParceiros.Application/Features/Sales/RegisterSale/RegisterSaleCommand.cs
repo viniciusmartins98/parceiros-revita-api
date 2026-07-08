@@ -7,7 +7,7 @@ namespace RevitaParceiros.Application.Features.Sales.RegisterSale;
 /// </summary>
 public sealed record RegisterSaleCommand(
     decimal Amount,
-    Guid PartnerId,
+    Guid? PartnerId,
     Guid ClientId,
     Guid RegisteredByUserId
 ) : IRequest<RegisterSaleResponse>;

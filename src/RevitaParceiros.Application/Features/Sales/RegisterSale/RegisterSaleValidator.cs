@@ -13,10 +13,6 @@ public sealed class RegisterSaleValidator : AbstractValidator<RegisterSaleComman
             .GreaterThan(0)
             .WithMessage("O valor da venda deve ser maior que zero.");
 
-        RuleFor(x => x.PartnerId)
-            .NotEmpty()
-            .WithMessage("O parceiro é obrigatório.");
-
         RuleFor(x => x.ClientId)
             .NotEmpty()
             .WithMessage("O cliente é obrigatório.");

@@ -35,6 +35,6 @@ public class SalesController(IServiceProvider provider) : ControllerBase<SalesCo
 public class RegisterSaleRequest
 {
     public decimal Amount { get; set; }
-    public Guid PartnerId { get; set; }
+    public Guid? PartnerId { get; set; }
     public Guid ClientId { get; set; }
 }

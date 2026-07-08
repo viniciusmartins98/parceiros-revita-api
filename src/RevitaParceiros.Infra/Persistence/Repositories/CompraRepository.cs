@@ -13,14 +13,17 @@ public sealed class CompraRepository(DatabaseContext context) : ICompraRepositor
     public async Task RegisterSaleAsync(
         Compras compra,
         IEnumerable<ExtratoPontos> extratoPontos,
-        Parceiros parceiro,
         Clientes cliente,
+        Parceiros? parceiro,
         CancellationToken cancellationToken = default)
     {
         await context.Compras.AddAsync(compra, cancellationToken);
         await context.ExtratoPontos.AddRangeAsync(extratoPontos, cancellationToken);
-        context.Parceiros.Update(parceiro);
         context.Clientes.Update(cliente);
+        if (parceiro != null)
+        {
+            context.Parceiros.Update(parceiro);
+        }
 
         await context.SaveChangesAsync(cancellationToken);
     }

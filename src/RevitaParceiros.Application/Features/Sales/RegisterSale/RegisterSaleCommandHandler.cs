@@ -19,8 +19,7 @@ public sealed class RegisterSaleCommandHandler(
 {
     public async ValueTask<RegisterSaleResponse> Handle(RegisterSaleCommand request, CancellationToken cancellationToken)
     {
-        var parceiro = await parceiroRepository.GetByIdAsync(request.PartnerId, cancellationToken)
-            ?? throw new NotFoundException("Parceiro", request.PartnerId);
+        var parceiro = request.PartnerId.HasValue ? await parceiroRepository.GetByIdAsync(request.PartnerId.Value, cancellationToken) : null;
 
         var cliente = await clienteRepository.GetByIdAsync(request.ClientId, cancellationToken)
             ?? throw new NotFoundException("Cliente", request.ClientId);
@@ -28,25 +27,27 @@ public sealed class RegisterSaleCommandHandler(
         var regraAtiva = await regrasPontuacaoRepository.GetActiveConfigAsync(cancellationToken)
             ?? throw new BusinessRuleException("Não há regra de pontuação ativa configurada. Configure uma regra antes de registrar vendas.");
 
-        // Obter valores acumulados
-        var (totalPartnerSales, totalPartnerPoints) = await compraRepository.GetPartnerAccumulatedAsync(parceiro.Id, cancellationToken);
-        var (totalClientPurchases, totalClientPoints) = await compraRepository.GetClientAccumulatedAsync(cliente.Id, cancellationToken);
-
-        // Calcular pontos Parceiro de forma cumulativa
-        var newTotalPartnerSales = totalPartnerSales + request.Amount;
-        var expectedTotalPartnerPoints = (int)Math.Floor(newTotalPartnerSales / regraAtiva.ValorCompraMinimoParceiro) * regraAtiva.PontosPorValorParceiro;
-        var pontosGeradosParceiro = Math.Max(0, expectedTotalPartnerPoints - totalPartnerPoints);
-
         // Calcular pontos Cliente de forma cumulativa
+        var (totalClientPurchases, totalClientPoints) = await compraRepository.GetClientAccumulatedAsync(cliente.Id, cancellationToken);
         var newTotalClientPurchases = totalClientPurchases + request.Amount;
         var expectedTotalClientPoints = (int)Math.Floor(newTotalClientPurchases / regraAtiva.ValorCompraMinimoCliente) * regraAtiva.PontosPorValorCliente;
         var pontosGeradosCliente = Math.Max(0, expectedTotalClientPoints - totalClientPoints);
+
+        // Calcular pontos Parceiro de forma cumulativa
+        int pontosGeradosParceiro = 0;
+        if (parceiro != null)
+        {
+            var (totalPartnerSales, totalPartnerPoints) = await compraRepository.GetPartnerAccumulatedAsync(parceiro.Id, cancellationToken);
+            var newTotalPartnerSales = totalPartnerSales + request.Amount;
+            var expectedTotalPartnerPoints = (int)Math.Floor(newTotalPartnerSales / regraAtiva.ValorCompraMinimoParceiro) * regraAtiva.PontosPorValorParceiro;
+            pontosGeradosParceiro = Math.Max(0, expectedTotalPartnerPoints - totalPartnerPoints);
+        }
 
         var compra = new Compras
         {
             Id = Guid.NewGuid(),
             ClienteId = cliente.Id,
-            ParceiroId = parceiro.Id,
+            ParceiroId = parceiro?.Id,
             RegistradoPor = request.RegisteredByUserId,
             Valor = request.Amount,
             DataCompra = DateTime.UtcNow,
@@ -89,7 +90,7 @@ public sealed class RegisterSaleCommandHandler(
             cliente.TotalPontos += pontosGeradosCliente;
         }
 
-        await compraRepository.RegisterSaleAsync(compra, extratos, parceiro, cliente, cancellationToken);
+        await compraRepository.RegisterSaleAsync(compra, extratos, cliente, parceiro, cancellationToken);
 
         return new RegisterSaleResponse(
             compra.Id,

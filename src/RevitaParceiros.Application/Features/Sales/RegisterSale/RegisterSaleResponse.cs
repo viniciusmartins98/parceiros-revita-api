@@ -6,7 +6,7 @@ namespace RevitaParceiros.Application.Features.Sales.RegisterSale;
 public sealed record RegisterSaleResponse(
     Guid Id,
     decimal Amount,
-    Guid PartnerId,
+    Guid? PartnerId,
     Guid ClientId,
     int PointsGenerated,
     DateTime CreatedAt);
