@@ -22,8 +22,7 @@ public class ScoringController(IServiceProvider provider) : ControllerBase<Scori
     public async Task<IActionResult> SavePartnerConfig([FromBody] ScoringConfigDto request, CancellationToken cancellationToken)
     {
         var command = new SavePartnerConfigCommand(
-            request.PurchaseAmountPerPoint,
-            request.PointsGenerated,
+            request.Ranges,
             request.PointsForRedemption,
             request.RedemptionValue,
             UserContext!.UserId

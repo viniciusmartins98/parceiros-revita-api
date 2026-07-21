@@ -15,16 +15,6 @@ public partial class RegrasPontuacao
     public string Nome { get; set; }
 
     /// <summary>
-    /// Valor em R$ de compras necessário para gerar pontos (ex: R$ 1.000,00).
-    /// </summary>
-    public decimal ValorCompraMinimoParceiro { get; set; }
-
-    /// <summary>
-    /// Quantidade de pontos gerados ao atingir o valor mínimo (ex: 100 pontos).
-    /// </summary>
-    public int PontosPorValorParceiro { get; set; }
-
-    /// <summary>
     /// Valor em R$ que o parceiro recebe ao resgatar pontos (ex: R$ 50,00).
     /// </summary>
     public decimal ValorMonetarioPorPontosParceiro { get; set; }
@@ -66,4 +56,6 @@ public partial class RegrasPontuacao
     public int PontosParaConversaoMonetariaCliente { get; set; }
 
     public virtual Usuarios CriadoPorNavigation { get; set; }
+
+    public virtual ICollection<FaixasPontuacao> FaixasPontuacao { get; set; } = new List<FaixasPontuacao>();
 }

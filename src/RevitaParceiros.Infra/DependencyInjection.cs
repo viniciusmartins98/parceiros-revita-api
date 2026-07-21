@@ -36,16 +36,17 @@ public static class DependencyInjection
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         // Auth Repositories & Services
-        services.AddScoped<Domain.Interfaces.IUsuarioRepository, RevitaParceiros.Infra.Persistence.Repositories.UsuarioRepository>();
-        services.AddScoped<Domain.Interfaces.IParceiroRepository, RevitaParceiros.Infra.Persistence.Repositories.ParceiroRepository>();
-        services.AddScoped<Domain.Interfaces.IFuncionarioRepository, RevitaParceiros.Infra.Persistence.Repositories.FuncionarioRepository>();
-        services.AddScoped<Domain.Interfaces.IClienteRepository, RevitaParceiros.Infra.Persistence.Repositories.ClienteRepository>();
-        services.AddScoped<Domain.Interfaces.IRefreshTokenRepository, RevitaParceiros.Infra.Persistence.Repositories.RefreshTokenRepository>();
-        services.AddScoped<Domain.Interfaces.IRegrasPontuacaoRepository, RevitaParceiros.Infra.Persistence.Repositories.RegrasPontuacaoRepository>();
-        services.AddScoped<Domain.Interfaces.ICompraRepository, RevitaParceiros.Infra.Persistence.Repositories.CompraRepository>();
-        services.AddScoped<Domain.Interfaces.ICompraFuncionarioRepository, RevitaParceiros.Infra.Persistence.Repositories.CompraFuncionarioRepository>();
-        services.AddScoped<Domain.Interfaces.IExtratoPontosRepository, RevitaParceiros.Infra.Persistence.Repositories.ExtratoPontosRepository>();
-        services.AddScoped<Domain.Interfaces.IResgatesRepository, RevitaParceiros.Infra.Persistence.Repositories.ResgatesRepository>();
+        services.AddScoped<Domain.Interfaces.IUsuarioRepository, Persistence.Repositories.UsuarioRepository>();
+        services.AddScoped<Domain.Interfaces.IParceiroRepository, Persistence.Repositories.ParceiroRepository>();
+        services.AddScoped<Domain.Interfaces.IFuncionarioRepository, Persistence.Repositories.FuncionarioRepository>();
+        services.AddScoped<Domain.Interfaces.IClienteRepository, Persistence.Repositories.ClienteRepository>();
+        services.AddScoped<Domain.Interfaces.IRefreshTokenRepository, Persistence.Repositories.RefreshTokenRepository>();
+        services.AddScoped<Domain.Interfaces.IRegrasPontuacaoRepository, Persistence.Repositories.RegrasPontuacaoRepository>();
+        services.AddScoped<Domain.Interfaces.ICompraRepository, Persistence.Repositories.CompraRepository>();
+        services.AddScoped<Domain.Interfaces.ICompraFuncionarioRepository, Persistence.Repositories.CompraFuncionarioRepository>();
+        services.AddScoped<Domain.Interfaces.IExtratoPontosRepository, Persistence.Repositories.ExtratoPontosRepository>();
+        services.AddScoped<Domain.Interfaces.IResgatesRepository, Persistence.Repositories.ResgatesRepository>();
+        services.AddScoped<Domain.Interfaces.IFaixaPontuacaoRepository, Persistence.Repositories.FaixaPontuacaoRepository>();
         services.AddSingleton<IJwtTokenService, JwtTokenService>();
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
 

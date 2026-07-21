@@ -38,6 +38,13 @@
          "ObjectType": 0
       },
       {
+         "ExcludedColumns": [
+            "tipo"
+         ],
+         "Name": "public.faixas_pontuacao",
+         "ObjectType": 0
+      },
+      {
          "Name": "public.funcionarios",
          "ObjectType": 0
       },

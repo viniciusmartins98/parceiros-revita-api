@@ -29,4 +29,15 @@ public sealed class ExtratoPontosRepository(DatabaseContext context) : IExtratoP
         await context.ExtratoPontos.AddAsync(extrato, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<DateTime?> GetPartnerLastRedemptionDateAsync(Guid partnerId, CancellationToken cancellationToken = default)
+    {
+        var lastRedemption = await context.ExtratoPontos
+            .AsNoTracking()
+            .Where(e => e.ParceiroId == partnerId && e.TipoTransacao == RevitaParceiros.Domain.Enums.TipoTransacaoPontosEnum.Resgate)
+            .OrderByDescending(e => e.CriadoEm)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return lastRedemption?.CriadoEm;
+    }
 }

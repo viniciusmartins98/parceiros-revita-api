@@ -14,7 +14,8 @@ public sealed class RegisterSaleCommandHandler(
     ICompraRepository compraRepository,
     IRegrasPontuacaoRepository regrasPontuacaoRepository,
     IParceiroRepository parceiroRepository,
-    IClienteRepository clienteRepository
+    IClienteRepository clienteRepository,
+    IExtratoPontosRepository extratoPontosRepository
 ) : IRequestHandler<RegisterSaleCommand, RegisterSaleResponse>
 {
     public async ValueTask<RegisterSaleResponse> Handle(RegisterSaleCommand request, CancellationToken cancellationToken)
@@ -33,13 +34,21 @@ public sealed class RegisterSaleCommandHandler(
         var expectedTotalClientPoints = (int)Math.Floor(newTotalClientPurchases / regraAtiva.ValorCompraMinimoCliente) * regraAtiva.PontosPorValorCliente;
         var pontosGeradosCliente = Math.Max(0, expectedTotalClientPoints - totalClientPoints);
 
-        // Calcular pontos Parceiro de forma cumulativa
+        // Calcular pontos Parceiro usando faixas (Tiered)
         int pontosGeradosParceiro = 0;
         if (parceiro != null)
         {
-            var (totalPartnerSales, totalPartnerPoints) = await compraRepository.GetPartnerAccumulatedAsync(parceiro.Id, cancellationToken);
+            var lastRedemptionDate = await extratoPontosRepository.GetPartnerLastRedemptionDateAsync(parceiro.Id, cancellationToken);
+            
+            var (totalPartnerSales, totalPartnerPoints) = await compraRepository.GetPartnerAccumulatedAsync(parceiro.Id, lastRedemptionDate, cancellationToken);
             var newTotalPartnerSales = totalPartnerSales + request.Amount;
-            var expectedTotalPartnerPoints = (int)Math.Floor(newTotalPartnerSales / regraAtiva.ValorCompraMinimoParceiro) * regraAtiva.PontosPorValorParceiro;
+
+            var partnerFaixas = regraAtiva.FaixasPontuacao
+                .Where(f => f.Tipo == TipoFaixaPontuacaoEnum.Parceiro)
+                .OrderBy(f => f.ValorVendas)
+                .ToList();
+
+            var expectedTotalPartnerPoints = CalculateTieredPoints(newTotalPartnerSales, partnerFaixas);
             pontosGeradosParceiro = Math.Max(0, expectedTotalPartnerPoints - totalPartnerPoints);
         }
 
@@ -99,5 +108,18 @@ public sealed class RegisterSaleCommandHandler(
             request.ClientId,
             pontosGeradosParceiro + pontosGeradosCliente,
             compra.CriadoEm);
+    }
+
+    private int CalculateTieredPoints(decimal totalSales, IEnumerable<FaixasPontuacao> faixas)
+    {
+        int points = 0;
+        foreach (var faixa in faixas)
+        {
+            if (totalSales >= faixa.ValorVendas)
+            {
+                points += faixa.Pontos;
+            }
+        }
+        return points;
     }
 }

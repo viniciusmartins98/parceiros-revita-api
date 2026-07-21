@@ -1,4 +1,5 @@
 using Mediator;
+using RevitaParceiros.Domain.Enums;
 using RevitaParceiros.Domain.Interfaces;
 
 namespace RevitaParceiros.Application.Features.Scoring.GetPartnerConfig;
@@ -20,8 +21,7 @@ public sealed class GetPartnerConfigQueryHandler : IRequestHandler<GetPartnerCon
         {
             return new ScoringConfigDto
             {
-                PurchaseAmountPerPoint = 1000,
-                PointsGenerated = 100,
+                Ranges = new List<ScoringRangeDto>(),
                 PointsForRedemption = 100,
                 RedemptionValue = 50,
                 UpdatedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
@@ -30,8 +30,15 @@ public sealed class GetPartnerConfigQueryHandler : IRequestHandler<GetPartnerCon
 
         return new ScoringConfigDto
         {
-            PurchaseAmountPerPoint = config.ValorCompraMinimoParceiro,
-            PointsGenerated = config.PontosPorValorParceiro,
+            Ranges = config.FaixasPontuacao
+                .Where(f => f.Tipo == TipoFaixaPontuacaoEnum.Parceiro)
+                .OrderBy(f => f.ValorVendas)
+                .Select(f => new ScoringRangeDto
+                {
+                    SalesThreshold = f.ValorVendas,
+                    Points = f.Pontos
+                })
+                .ToList(),
             PointsForRedemption = config.PontosParaConversaoMonetariaParceiro,
             RedemptionValue = config.ValorMonetarioPorPontosParceiro,
             UpdatedAt = config.AtualizadoEm ?? config.CriadoEm

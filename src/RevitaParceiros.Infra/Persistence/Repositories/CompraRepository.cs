@@ -28,10 +28,16 @@ public sealed class CompraRepository(DatabaseContext context) : ICompraRepositor
         await context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<(decimal TotalAmount, int TotalPoints)> GetPartnerAccumulatedAsync(Guid parceiroId, CancellationToken cancellationToken = default)
+    public async Task<(decimal TotalAmount, int TotalPoints)> GetPartnerAccumulatedAsync(Guid parceiroId, DateTime? sinceDate = null, CancellationToken cancellationToken = default)
     {
-        var result = await context.Compras
-            .Where(c => c.ParceiroId == parceiroId)
+        var query = context.Compras.Where(c => c.ParceiroId == parceiroId);
+        
+        if (sinceDate.HasValue)
+        {
+            query = query.Where(c => c.DataCompra > sinceDate.Value);
+        }
+
+        var result = await query
             .GroupBy(c => c.ParceiroId)
             .Select(g => new
             {
