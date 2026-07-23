@@ -7,6 +7,7 @@ using RevitaParceiros.Application.Features.Partners.ListPartners;
 using RevitaParceiros.Application.Features.Partners.UpdatePartner;
 using RevitaParceiros.Application.Features.Points.ListPartnerPointsHistory;
 using RevitaParceiros.Application.Features.Sales.ListPartnerSales;
+using RevitaParceiros.Application.Features.Partners.GetPartnerProgress;
 
 namespace RevitaParceiros.API.Controllers;
 
@@ -66,6 +67,14 @@ public class PartnersController(IServiceProvider provider) : ControllerBase<Part
     public async Task<IActionResult> GetPointsHistory([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new ListPartnerPointsHistoryQuery(id), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/progress")]
+    [Authorize(Roles = "Administrador,Funcionario,Parceiro")]
+    public async Task<IActionResult> GetProgress([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new GetPartnerProgressRequest(id), cancellationToken);
         return Ok(result);
     }
 }

@@ -21,8 +21,6 @@ public sealed class ClienteRepository(DatabaseContext context) : IClienteReposit
         return await context.Clientes
             .Include(c => c.Usuario)
             .ThenInclude(u => u.TokensAtualizacao)
-            .Include(c => c.Compras)
-            .Include(c => c.ExtratoPontos)
             .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
     }
 

@@ -29,8 +29,6 @@ public sealed class ParceiroRepository(DatabaseContext context) : IParceiroRepos
         return await context.Parceiros
             .Include(p => p.Usuario)
             .ThenInclude(u => u.TokensAtualizacao)
-            .Include(u => u.Compras)
-            .Include(u => u.ExtratoPontos)
             .FirstOrDefaultAsync(p => p.Usuario.Id == id, cancellationToken);
     }
 

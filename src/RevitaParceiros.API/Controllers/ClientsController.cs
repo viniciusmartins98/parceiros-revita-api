@@ -7,6 +7,7 @@ using RevitaParceiros.Application.Features.Clients.ListClients;
 using RevitaParceiros.Application.Features.Clients.UpdateClient;
 using RevitaParceiros.Application.Features.Points.ListClientPointsHistory;
 using RevitaParceiros.Application.Features.Sales.ListClientSales;
+using RevitaParceiros.Application.Features.Clients.GetClientProgress;
 
 namespace RevitaParceiros.API.Controllers;
 
@@ -66,6 +67,14 @@ public class ClientsController(IServiceProvider provider) : ControllerBase<Clien
     public async Task<IActionResult> GetPointsHistory([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(new ListClientPointsHistoryQuery(id), cancellationToken);
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/progress")]
+    [Authorize(Roles = "Administrador,Funcionario,Cliente")]
+    public async Task<IActionResult> GetProgress([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var result = await Mediator.Send(new GetClientProgressRequest(id), cancellationToken);
         return Ok(result);
     }
 }
