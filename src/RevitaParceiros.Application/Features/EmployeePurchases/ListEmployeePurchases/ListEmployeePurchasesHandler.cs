@@ -1,6 +1,5 @@
 using Mediator;
 using RevitaParceiros.Domain.Interfaces;
-using System.Linq;
 
 namespace RevitaParceiros.Application.Features.EmployeePurchases.ListEmployeePurchases;
 
@@ -9,15 +8,21 @@ public sealed class ListEmployeePurchasesHandler(ICompraFuncionarioRepository co
 {
     public async ValueTask<List<EmployeePurchaseDto>> Handle(ListEmployeePurchasesRequest request, CancellationToken cancellationToken)
     {
-        DateTime? startDate = request.Period.ToLower() switch
-        {
-            "week" => DateTime.UtcNow.AddDays(-7),
-            "month" => DateTime.UtcNow.AddMonths(-1),
-            "year" => DateTime.UtcNow.AddYears(-1),
-            _ => null
-        };
+        DateTime? startDate = request.StartDate;
+        DateTime? endDate = request.EndDate;
 
-        var compras = await compraFuncionarioRepository.GetByFuncionarioIdAsync(request.FuncionarioId, startDate, cancellationToken);
+        if (!startDate.HasValue && !endDate.HasValue && !string.IsNullOrEmpty(request.Period))
+        {
+            startDate = request.Period.ToLower() switch
+            {
+                "week" => DateTime.UtcNow.AddDays(-7),
+                "month" => DateTime.UtcNow.AddMonths(-1),
+                "year" => DateTime.UtcNow.AddYears(-1),
+                _ => null
+            };
+        }
+
+        var compras = await compraFuncionarioRepository.GetByFuncionarioIdAsync(request.FuncionarioId, startDate, endDate, cancellationToken);
 
         return compras.Select(c => new EmployeePurchaseDto(
             c.Id,

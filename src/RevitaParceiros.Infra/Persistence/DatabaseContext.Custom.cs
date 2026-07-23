@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RevitaParceiros.Domain.Entities;
 using RevitaParceiros.Domain.Enums;
@@ -23,5 +23,12 @@ public partial class DatabaseContext : DbContext
             entity.Property(p => p.TipoTransacao)
                 .HasConversion(new EnumToStringConverter<TipoTransacaoPontosEnum>())
         );
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder
+            .Properties<DateTime>()
+            .HaveConversion<Converters.BrazilianDateTimeConverter>();
     }
 }

@@ -7,7 +7,8 @@ namespace RevitaParceiros.Domain.Interfaces;
 /// </summary>
 public interface ICompraFuncionarioRepository
 {
-    Task<IReadOnlyCollection<ComprasFuncionarios>> GetByFuncionarioIdAsync(Guid funcionarioId, DateTime? startDate = null, CancellationToken cancellationToken = default);
-    Task<IReadOnlyCollection<ComprasFuncionarios>> GetAllAsync(DateTime? startDate = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<ComprasFuncionarios>> GetByFuncionarioIdAsync(Guid funcionarioId, DateTime? startDate = null, DateTime? endDate = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<ComprasFuncionarios>> GetAllAsync(DateTime? startDate = null, DateTime? endDate = null, CancellationToken cancellationToken = default);
     Task AddAsync(ComprasFuncionarios compra, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }
