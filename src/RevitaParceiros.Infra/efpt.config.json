@@ -35,6 +35,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "public.faixas_pontuacao",
+         "ObjectType": 0
+      },
+      {
          "Name": "public.funcionarios",
          "ObjectType": 0
       },

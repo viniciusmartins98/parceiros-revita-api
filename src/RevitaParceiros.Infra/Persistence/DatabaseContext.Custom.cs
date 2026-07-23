@@ -23,6 +23,11 @@ public partial class DatabaseContext : DbContext
             entity.Property(p => p.TipoTransacao)
                 .HasConversion(new EnumToStringConverter<TipoTransacaoPontosEnum>())
         );
+
+        modelBuilder.Entity<FaixasPontuacao>(entity =>
+            entity.Property(p => p.Tipo)
+                .HasConversion(new EnumToStringConverter<TipoFaixaPontuacaoEnum>())
+        );
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

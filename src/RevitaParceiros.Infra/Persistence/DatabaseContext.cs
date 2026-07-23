@@ -22,6 +22,8 @@ public partial class DatabaseContext : DbContext
 
     public virtual DbSet<ExtratoPontos> ExtratoPontos { get; set; }
 
+    public virtual DbSet<FaixasPontuacao> FaixasPontuacao { get; set; }
+
     public virtual DbSet<Funcionarios> Funcionarios { get; set; }
 
     public virtual DbSet<Parceiros> Parceiros { get; set; }
@@ -233,6 +235,36 @@ public partial class DatabaseContext : DbContext
                 .HasConstraintName("fk_extrato_parceiro");
         });
 
+        modelBuilder.Entity<FaixasPontuacao>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("faixas_pontuacao_pkey");
+
+            entity.ToTable("faixas_pontuacao");
+
+            entity.HasIndex(e => new { e.RegraPontuacaoId, e.Tipo }, "ix_faixas_pontuacao_regra");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("id");
+            entity.Property(e => e.CriadoEm)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("criado_em");
+            entity.Property(e => e.Pontos).HasColumnName("pontos");
+            entity.Property(e => e.RegraPontuacaoId).HasColumnName("regra_pontuacao_id");
+            entity.Property(e => e.Tipo)
+                .IsRequired()
+                .HasMaxLength(10)
+                .HasDefaultValueSql("'parceiro'::character varying")
+                .HasColumnName("tipo");
+            entity.Property(e => e.ValorVendas)
+                .HasPrecision(12, 2)
+                .HasColumnName("valor_vendas");
+
+            entity.HasOne(d => d.RegraPontuacao).WithMany(p => p.FaixasPontuacao)
+                .HasForeignKey(d => d.RegraPontuacaoId)
+                .HasConstraintName("faixas_pontuacao_regra_pontuacao_id_fkey");
+        });
+
         modelBuilder.Entity<Funcionarios>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("funcionarios_pkey");
@@ -322,18 +354,11 @@ public partial class DatabaseContext : DbContext
                 .HasDefaultValue(100)
                 .HasComment("Quantidade de pontos gerados ao atingir o valor mínimo para o cliente.")
                 .HasColumnName("pontos_por_valor_cliente");
-            entity.Property(e => e.PontosPorValorParceiro)
-                .HasComment("Quantidade de pontos gerados ao atingir o valor mínimo (ex: 100 pontos).")
-                .HasColumnName("pontos_por_valor_parceiro");
             entity.Property(e => e.ValorCompraMinimoCliente)
                 .HasPrecision(12, 2)
                 .HasDefaultValue(1000.00m)
                 .HasComment("Valor em R$ de compras necessário para gerar pontos para o cliente (ex: R$ 1.000,00).")
                 .HasColumnName("valor_compra_minimo_cliente");
-            entity.Property(e => e.ValorCompraMinimoParceiro)
-                .HasPrecision(12, 2)
-                .HasComment("Valor em R$ de compras necessário para gerar pontos (ex: R$ 1.000,00).")
-                .HasColumnName("valor_compra_minimo_parceiro");
             entity.Property(e => e.ValorMonetarioPorPontosCliente)
                 .HasPrecision(12, 2)
                 .HasDefaultValue(50.00m)

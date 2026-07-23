@@ -1,5 +1,6 @@
 using Mediator;
 using RevitaParceiros.Domain.Entities;
+using RevitaParceiros.Domain.Enums;
 using RevitaParceiros.Domain.Interfaces;
 
 namespace RevitaParceiros.Application.Features.Scoring.SaveClientConfig;
@@ -7,10 +8,12 @@ namespace RevitaParceiros.Application.Features.Scoring.SaveClientConfig;
 public sealed class SaveClientConfigCommandHandler : IRequestHandler<SaveClientConfigCommand, ScoringConfigDto>
 {
     private readonly IRegrasPontuacaoRepository _repository;
+    private readonly IFaixaPontuacaoRepository _faixaRepository;
 
-    public SaveClientConfigCommandHandler(IRegrasPontuacaoRepository repository)
+    public SaveClientConfigCommandHandler(IRegrasPontuacaoRepository repository, IFaixaPontuacaoRepository faixaRepository)
     {
         _repository = repository;
+        _faixaRepository = faixaRepository;
     }
 
     public async ValueTask<ScoringConfigDto> Handle(SaveClientConfigCommand request, CancellationToken cancellationToken)
@@ -28,8 +31,6 @@ public sealed class SaveClientConfigCommandHandler : IRequestHandler<SaveClientC
         {
             Id = Guid.NewGuid(),
             Nome = "Configuração Padrão",
-            ValorCompraMinimoParceiro = currentActive?.ValorCompraMinimoParceiro ?? 1000m,
-            PontosPorValorParceiro = currentActive?.PontosPorValorParceiro ?? 100,
             PontosParaConversaoMonetariaParceiro = currentActive?.PontosParaConversaoMonetariaParceiro ?? 100,
             ValorMonetarioPorPontosParceiro = currentActive?.ValorMonetarioPorPontosParceiro ?? 50m,
             ValorCompraMinimoCliente = request.PurchaseAmountPerPoint,
@@ -41,7 +42,28 @@ public sealed class SaveClientConfigCommandHandler : IRequestHandler<SaveClientC
             CriadoEm = DateTime.UtcNow
         };
 
+        var faixas = new List<FaixasPontuacao>();
+
+        if (currentActive != null && currentActive.FaixasPontuacao != null)
+        {
+            foreach (var partnerFaixa in currentActive.FaixasPontuacao.Where(f => f.Tipo == TipoFaixaPontuacaoEnum.Parceiro))
+            {
+                faixas.Add(new FaixasPontuacao
+                {
+                    RegraPontuacaoId = newConfig.Id,
+                    Tipo = TipoFaixaPontuacaoEnum.Parceiro,
+                    ValorVendas = partnerFaixa.ValorVendas,
+                    Pontos = partnerFaixa.Pontos,
+                    CriadoEm = DateTime.UtcNow
+                });
+            }
+        }
+
         await _repository.AddAsync(newConfig, cancellationToken);
+        if (faixas.Any())
+        {
+            await _faixaRepository.AddRangeAsync(faixas, cancellationToken);
+        }
 
         return new ScoringConfigDto
         {

@@ -7,4 +7,11 @@ public class ScoringConfigDto
     public int PointsForRedemption { get; set; }
     public decimal RedemptionValue { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    public List<ScoringRangeDto> Ranges { get; set; } = new List<ScoringRangeDto>();
+}
+
+public class ScoringRangeDto
+{
+    public decimal SalesThreshold { get; set; }
+    public int Points { get; set; }
 }

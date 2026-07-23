@@ -23,11 +23,14 @@ public class RedeemPartnerPointsCommandHandler(
         if (parceiro == null)
             throw new BusinessRuleException("Parceiro não encontrado.");
 
-        if (request.Points > parceiro.TotalPontos)
-            throw new BusinessRuleException("Pontos insuficientes para resgate.");
+        if (request.Points == 0)
+            throw new BusinessRuleException("Valor de resgate precisa ser maior que zero.");
 
-        if (request.Points % config.PontosParaConversaoMonetariaParceiro != 0)
-            throw new BusinessRuleException($"Os pontos devem ser múltiplos de {config.PontosParaConversaoMonetariaParceiro}.");
+        if (parceiro.TotalPontos <= 0)
+            throw new BusinessRuleException("Parceiro não tem pontos para serem resgatados.");
+
+        if (request.Points != parceiro.TotalPontos)
+            throw new BusinessRuleException("É permitido apenas o resgate total dos pontos do parceiro.");
 
         decimal valorMonetario = (request.Points / config.PontosParaConversaoMonetariaParceiro) * config.ValorMonetarioPorPontosParceiro;
 

@@ -16,6 +16,7 @@ public class RegrasPontuacaoRepository : IRegrasPontuacaoRepository
     public async Task<RegrasPontuacao?> GetActiveConfigAsync(CancellationToken cancellationToken = default)
     {
         return await _context.RegrasPontuacao
+            .Include(x => x.FaixasPontuacao)
             .FirstOrDefaultAsync(x => x.Ativo, cancellationToken);
     }
 
